@@ -1,4 +1,4 @@
-import { axiosInstance } from "../axios"
+import { axiosHomeInstance, axiosInstance } from "../axios"
 
 type UserLoginResponse = {
     sessionToken: string;
@@ -8,7 +8,7 @@ type UserLoginResponse = {
     role: string;
 }
 export const userLogin = async (params: {username: string, password: string}): Promise<UserLoginResponse> => {
-    return axiosInstance.post<UserLoginResponse, any>(`/login`, {
+    return axiosHomeInstance.post<UserLoginResponse, any>(`/login`, {
         ...params,
         role: "user"
     });

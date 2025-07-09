@@ -33,9 +33,7 @@ function TransactionsPage() {
     initialPageParam: null,
     getNextPageParam: (lastPage, pages) => {
       console.log("Last Page:", lastPage)
-      // if (lastPage.nextCursor) 
-      //   setCursor(lastPage.nextCursor)
-      return lastPage.nextCursor
+      return lastPage?.nextCursor || null
     },
   })
   // {
