@@ -6,17 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { mockTransactions } from "@/lib/data"
 import { AddTransactionModal } from "@/components/modals/add-transaction-modal"
-import { QueryClient, useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { query } from "@/api/query"
 import { formatDate } from "@/utils/formats/date"
 import TableLoadMore from "@/components/table/pagination"
 import { usePagination } from "@/components/table/usePagination"
-import { getTransactions } from "@/api/transaction"
 
 const tabs = ["All", "Revenue", "Expenses", "Loan", "Borrow"]
-
 
 function TransactionsPage() {
   const pagination = usePagination()
@@ -25,23 +22,10 @@ function TransactionsPage() {
   const {
     data,
     fetchNextPage,
-    hasNextPage,
     isError,
-  } = useInfiniteQuery({
-    queryKey: ['projects'],
-    queryFn: ({ pageParam }: { pageParam: string | null }) => getTransactions({ cursor: pageParam, limit }),
-    initialPageParam: null,
-    getNextPageParam: (lastPage, pages) => {
-      console.log("Last Page:", lastPage)
-      return lastPage?.nextCursor || null
-    },
-  })
-  // {
-  //   queryKey: ['projects'],
-  //   queryFn: fetchProjects,
-  //   initialPageParam: 0,
-  //   getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  // }
+    isFetching,
+  } = useInfiniteQuery(query.transaction.getAllTransaction({ limit }))
+
   const [activeTab, setActiveTab] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
@@ -60,14 +44,10 @@ function TransactionsPage() {
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
     }
   }
-  // useEffect(() => {
-  //   if (isSuccess && transactions?.data) {
-  //     setTotalItems(transactions.totalCount)
-  //   }
-  // }, [isSuccess, transactions])
 
   const pages = data?.pages
-  console.log({ hasNextPage })
+  const tableData = pages?.flatMap(page => page.data) || []
+
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
       <Header title="Transactions" breadcrumbs={[{ name: "Transactions" }]} />
@@ -117,6 +97,7 @@ function TransactionsPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-gray-700">
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">No</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Category</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Partner</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Type</th>
@@ -126,35 +107,36 @@ function TransactionsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {isError && !pages ? null : pages?.map((transactions) => transactions?.data?.map((transaction) => (
-                      <tr key={transaction._id} className="border-b border-gray-100 dark:border-gray-800">
-                        <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.category.name}</td>
-                        <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.partner.name}</td>
-                        <td className="py-3 px-4">
-                          <Badge className={getTypeColor(transaction.type.name)}>{transaction.type.name}</Badge>
-                        </td>
-                        <td className="py-3 px-4 text-gray-900 dark:text-white">{formatDate(transaction.date, "dd/mm/yyyy")}</td>
-                        <td className="py-3 px-4 text-gray-900 dark:text-white">
-                          ${transaction.amount.toLocaleString()}
-                        </td>
-                        <td className="py-3 px-4">
-                          <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm">
-                              <span className="text-blue-600">✏️</span>
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <span className="text-red-600">🗑️</span>
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    )))}
+                  {isError || !tableData ? null : tableData?.map((transaction, index) => (
+                    <tr key={transaction._id} className="border-b border-gray-100 dark:border-gray-800">
+                      <td className="py-3 px-4 text-gray-900 dark:text-white">{index}</td>
+                      <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.category.name}</td>
+                      <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.partner.name}</td>
+                      <td className="py-3 px-4">
+                        <Badge className={getTypeColor(transaction.type.name)}>{transaction.type.name}</Badge>
+                      </td>
+                      <td className="py-3 px-4 text-gray-900 dark:text-white">{formatDate(transaction.date, "dd/mm/yyyy")}</td>
+                      <td className="py-3 px-4 text-gray-900 dark:text-white">
+                        {transaction.amount.toLocaleString()}đ
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex space-x-2">
+                          <Button variant="ghost" size="sm">
+                            <span className="text-blue-600">✏️</span>
+                          </Button>
+                          <Button variant="ghost" size="sm">
+                            <span className="text-red-600">🗑️</span>
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
 
             {/* Pagination */}
-            <TableLoadMore fetchNextPage={fetchNextPage} />
+            <TableLoadMore fetchNextPage={fetchNextPage} isLoading={isFetching} setLimit={setLimit} defaultLimit={limit} />
           </CardContent>
         </Card>
       </div>

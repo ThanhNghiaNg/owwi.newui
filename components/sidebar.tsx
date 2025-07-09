@@ -7,7 +7,6 @@ import { useTheme } from "@/contexts/theme-context"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: "📊" },
-  { name: "My Wallet", href: "/wallet", icon: "💰" },
   { name: "Transactions", href: "/transactions", icon: "💸" },
   { name: "Partners", href: "/partners", icon: "👥" },
   { name: "Category", href: "/categories", icon: "🏷️" },

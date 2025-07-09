@@ -13,6 +13,7 @@ export type TableResponse<T> ={
     data: T[];
     nextCursor: string | null,
     hasNextPage: boolean;
+    limit?: number;
 }
 export interface GetTransactionParams extends TableFilter {
     page?: number;

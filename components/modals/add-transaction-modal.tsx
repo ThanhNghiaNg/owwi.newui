@@ -23,7 +23,6 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
     category: "",
     partner: "",
     date: "",
-    wallet: "",
     description: "",
   })
 
@@ -44,13 +43,6 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
     { value: "borrow", label: "Borrow" },
   ]
 
-  const walletOptions = [
-    { value: "cash", label: "Cash" },
-    { value: "card", label: "Card" },
-    { value: "bank", label: "Bank" },
-    { value: "digital", label: "Digital Wallet" },
-  ]
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Transaction data:", formData)
@@ -61,7 +53,6 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
       category: "",
       partner: "",
       date: "",
-      wallet: "",
       description: "",
     })
   }
@@ -71,7 +62,7 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount *</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount <span className="text-red-500">*</span></label>
             <Input
               type="number"
               placeholder="0.00"
@@ -82,18 +73,18 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Type *</label>
-            <Select
-              options={typeOptions}
-              value={formData.type}
-              onChange={(value) => setFormData({ ...formData, type: value })}
-              placeholder="Select type"
-            />
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Type <span className="text-red-500">*</span></label>
+            <Combobox
+            options={typeOptions}
+            value={formData.type}
+            onChange={(value) => setFormData({ ...formData, type: value })}
+            placeholder="Select or search type..."
+          />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Category *</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Category <span className="text-red-500">*</span></label>
           <Combobox
             options={categoryOptions}
             value={formData.category}
@@ -103,7 +94,7 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Partner *</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Partner <span className="text-red-500">*</span></label>
           <Combobox
             options={partnerOptions}
             value={formData.partner}
@@ -114,22 +105,12 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date *</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date <span className="text-red-500">*</span></label>
             <Input
               type="date"
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Wallet *</label>
-            <Select
-              options={walletOptions}
-              value={formData.wallet}
-              onChange={(value) => setFormData({ ...formData, wallet: value })}
-              placeholder="Select wallet"
             />
           </div>
         </div>

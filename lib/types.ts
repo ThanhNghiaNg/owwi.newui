@@ -5,7 +5,6 @@ export interface Transaction {
   category: string
   partner: string
   date: string
-  wallet: string
   description?: string
 }
 

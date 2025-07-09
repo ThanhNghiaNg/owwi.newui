@@ -8,7 +8,6 @@ export const mockTransactions: Transaction[] = [
     category: "Salary",
     partner: "Company ABC",
     date: "2024-01-23",
-    wallet: "Cash",
     description: "Monthly salary",
   },
   {
@@ -18,7 +17,6 @@ export const mockTransactions: Transaction[] = [
     category: "Personal Loan",
     partner: "John Doe",
     date: "2024-01-23",
-    wallet: "Cash",
     description: "Emergency loan",
   },
   {
@@ -28,7 +26,6 @@ export const mockTransactions: Transaction[] = [
     category: "Food",
     partner: "Restaurant XYZ",
     date: "2024-01-22",
-    wallet: "Card",
     description: "Dinner",
   },
 ]

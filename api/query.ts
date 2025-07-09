@@ -1,12 +1,14 @@
-import { queryOptions } from "@tanstack/react-query";
-import { getTransactionById, GetTransactionParams, getTransactions } from "./transaction";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+import { getTransactionById, GetTransactionParams, getTransactions, TableResponse } from "./transaction";
 import { whoami } from "./user";
+import { Transaction } from "@/lib/types";
 export const keys = {
     all: ['all'],
     user: ['user'],
     userWhoami: () => [...keys.all, 'user', 'whoami'],
     transaction: (id: string) => ['transaction', id],
-    transactions: (query: GetTransactionParams) => ['transaction', 'list', JSON.stringify(query)],
+    transactions: () => ['transactions'],
+    // transactions: (query: GetTransactionParams) => ['transaction', 'list', JSON.stringify(query)],
     category: (id: string) => ['category', id],
     categories: (query: { page: number, pageSize: number }) => ['category', 'list', query.page, query.pageSize],
     partner: (id: string) => ['partner', id],
@@ -15,7 +17,7 @@ export const keys = {
 
 export const query = {
     user: {
-        whoami : () => queryOptions({
+        whoami: () => queryOptions({
             queryKey: keys.userWhoami(),
             queryFn: whoami,
             staleTime(query) {
@@ -30,11 +32,14 @@ export const query = {
                 queryKey: keys.transaction(id),
                 queryFn: () => getTransactionById(id),
             }),
-        getAll: (query: GetTransactionParams) =>
-            queryOptions({
-                queryKey: keys.transactions(query),
-                queryFn: () => getTransactions(query),
-                
-            }),
+        getAllTransaction: (query: GetTransactionParams) => infiniteQueryOptions({
+            queryKey: keys.transactions(),
+            queryFn: ({ pageParam }: { pageParam: string | null }) => getTransactions({ cursor: pageParam, ...query }),
+            initialPageParam: null,
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            getNextPageParam: (lastPage: TableResponse<Transaction> | any) => {
+                return lastPage?.nextCursor || null
+            },
+        })
     },
 };
