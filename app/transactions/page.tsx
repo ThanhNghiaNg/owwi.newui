@@ -126,7 +126,7 @@ function TransactionsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {isError && !pages ? null : pages?.map((transactions) => transactions?.data.map((transaction) => (
+                  {isError && !pages ? null : pages?.map((transactions) => transactions?.data?.map((transaction) => (
                       <tr key={transaction._id} className="border-b border-gray-100 dark:border-gray-800">
                         <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.category.name}</td>
                         <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.partner.name}</td>

@@ -10,6 +10,7 @@ import { mutation } from "@/api/mutate"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { ROUTES } from "@/utils/constants/routes"
+import { SESSION_ID } from "@/utils/constants/keys"
 
 function LoginPage() {
     const router = useRouter()
@@ -41,7 +42,8 @@ function LoginPage() {
                 password: formData.password,
             })
             console.log(res)
-            if (res.token) {
+            if (res.sessionToken) {
+                localStorage.setItem(SESSION_ID, res.sessionToken)
                 router.push(ROUTES.HOME)
             }
         } catch (error) {

@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import ERROR_MESSAGE from "@/utils/constants/error-message";
 import toast from 'react-hot-toast';
+import { SESSION_ID } from '@/utils/constants/keys';
 
 
 let toastTimeout: NodeJS.Timeout | null = null;
@@ -35,4 +36,12 @@ export const setupAxiosInterceptors = (router: AppRouterInstance, axiosInstance:
             return error.response.data
         }
     );
+
+    axiosInstance.interceptors.request.use((req)=>{
+        const sessionId = localStorage.getItem(SESSION_ID) || ''
+        if (sessionId){
+            req.headers['Bearer'] = sessionId;
+        }
+        return req;
+    })
 };
