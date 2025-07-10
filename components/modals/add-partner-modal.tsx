@@ -19,13 +19,6 @@ const typeOptions = [
 ]
 
 export function AddPartnerModal({ isOpen, onClose }: AddPartnerModalProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    type: "",
-    email: "",
-    phone: "",
-  })
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Partner data:", formData)

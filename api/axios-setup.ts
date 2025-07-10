@@ -33,7 +33,7 @@ export const setupAxiosInterceptors = (router: AppRouterInstance, axiosInstance:
                 showToastTimeout(ERROR_MESSAGE.SYSTEM_ERROR);
                 return;
             }
-            return error.response.data
+            throw error;
         }
     );
 

@@ -2,17 +2,23 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 import { getTransactionById, GetTransactionParams, getTransactions, TableResponse } from "./transaction";
 import { whoami } from "./user";
 import { Transaction } from "@/lib/types";
+import { getAllTypes } from "./types";
+import { getAllCategories } from "./category";
+import { getAllPartners } from "./partners";
 export const keys = {
     all: ['all'],
     user: ['user'],
     userWhoami: () => [...keys.all, 'user', 'whoami'],
-    transaction: (id: string) => ['transaction', id],
-    transactions: () => ['transactions'],
+    transaction: (id: string) => [...keys.all, 'transaction', id],
+    transactions: () => [...keys.all, 'transactions'],
     // transactions: (query: GetTransactionParams) => ['transaction', 'list', JSON.stringify(query)],
-    category: (id: string) => ['category', id],
-    categories: (query: { page: number, pageSize: number }) => ['category', 'list', query.page, query.pageSize],
-    partner: (id: string) => ['partner', id],
-    partners: (query: { page: number, pageSize: number }) => ['partner', 'list', query.page, query.pageSize],
+    category: (id: string) => [...keys.all, 'category', id],
+    // categories: (query: { page: number, pageSize: number }) => [...keys.all, 'category', 'list', query.page, query.pageSize],
+    partner: (id: string) => [...keys.all, 'partner', id],
+    // partners: (query: { page: number, pageSize: number }) => [...keys.all, 'partner', 'list', query.page, query.pageSize],
+    types: () => [...keys.all, 'types'],
+    categories: () => [...keys.all, 'categories'],
+    partners: () => [...keys.all, 'partners'],
 }
 
 export const query = {
@@ -24,6 +30,27 @@ export const query = {
                 // 1 hour
                 return 1000 * 60 * 60;
             },
+        })
+    },
+    type: {
+        getAll: () => queryOptions({
+            queryKey: keys.types(),
+            queryFn: getAllTypes,
+            staleTime: 1000 * 60 * 60, // 1 hour
+        })
+    },
+    category: {
+        getAll: () => queryOptions({
+            queryKey: keys.categories(),
+            queryFn: getAllCategories,
+            staleTime: 1000 * 60 * 60, // 1 hour
+        })
+    },
+    partner: {
+        getAll: () => queryOptions({
+            queryKey: keys.partners(),
+            queryFn: getAllPartners,
+            staleTime: 1000 * 60 * 60, // 1 hour
         })
     },
     transaction: {

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,23 +12,29 @@ import { query } from "@/api/query"
 import { formatDate } from "@/utils/formats/date"
 import TableLoadMore from "@/components/table/pagination"
 import { usePagination } from "@/components/table/usePagination"
+import { EditTransactionModal } from "@/components/modals/edit-transaction-modal"
+import { TransactionResponse } from "@/api/transaction"
+import { DeleteTransactionModal } from "@/components/modals/delete-transaction-modal"
 
 const tabs = ["All", "Revenue", "Expenses", "Loan", "Borrow"]
 
 function TransactionsPage() {
   const pagination = usePagination()
   const { cursor, limit, setCursor, setLimit } = pagination
-  // const { data: transactions, isError, isSuccess } = useQuery(query.transaction.getAll({ page: currentPage, pageSize }))
+
   const {
     data,
     fetchNextPage,
     isError,
     isFetching,
+    isRefetching,
   } = useInfiniteQuery(query.transaction.getAllTransaction({ limit }))
 
   const [activeTab, setActiveTab] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [editTransaction, setEditTransaction] = useState<TransactionResponse | null>(null)
+  const [deleteTransactionId, setDeleteTransactionId] = useState<string>("")
 
   const getTypeColor = (type: string) => {
     switch (type.toLowerCase()) {
@@ -48,8 +54,26 @@ function TransactionsPage() {
   const pages = data?.pages
   const tableData = pages?.flatMap(page => page.data) || []
 
+  const onDeleteTransaction = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const transactionId = e.currentTarget.dataset.id
+    if (!transactionId) return
+
+    setDeleteTransactionId(transactionId)
+  }, [])
+
+  const onEditTransaction = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const transactionId = e.currentTarget.dataset.id
+    if (!transactionId) return
+    const transaction = tableData.find(t => t._id === transactionId)
+    if (transaction) {
+      setEditTransaction(transaction)
+    }
+  }, [tableData])
+
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
+      {isRefetching &&
+        <div className="loader-dots absolute inset-1/2 -translate-x-1/2 -translate-y-1/2" />}
       <Header title="Transactions" breadcrumbs={[{ name: "Transactions" }]} />
 
       <div className="p-6">
@@ -58,13 +82,13 @@ function TransactionsPage() {
             <div className="flex items-center justify-between">
               <CardTitle>Recent Transactions</CardTitle>
               <Button onClick={() => setIsAddModalOpen(true)}>
-                <span className="mr-2">➕</span>
-                Add Transaction
+                <span className="mr-2">+</span>
+                Transaction
               </Button>
             </div>
 
             {/* Tabs */}
-            <div className="flex space-x-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg w-fit">
+            {/* <div className="flex space-x-1 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg w-fit">
               {tabs.map((tab) => (
                 <button
                   key={tab}
@@ -77,7 +101,7 @@ function TransactionsPage() {
                   {tab}
                 </button>
               ))}
-            </div>
+            </div> */}
           </CardHeader>
 
           <CardContent>
@@ -121,10 +145,10 @@ function TransactionsPage() {
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onEditTransaction}>
                             <span className="text-blue-600">✏️</span>
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onDeleteTransaction}>
                             <span className="text-red-600">🗑️</span>
                           </Button>
                         </div>
@@ -141,6 +165,22 @@ function TransactionsPage() {
         </Card>
       </div>
       <AddTransactionModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+      {
+        editTransaction &&
+        <EditTransactionModal
+          isOpen={!!editTransaction}
+          onClose={() => setEditTransaction(null)}
+          transaction={editTransaction}
+        />
+      }
+      {
+        deleteTransactionId &&
+        <DeleteTransactionModal
+          isOpen={!!deleteTransactionId}
+          onClose={() => setDeleteTransactionId("")}
+          id={deleteTransactionId}
+        />
+      }
     </div>
   )
 }

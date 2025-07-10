@@ -21,7 +21,7 @@ export interface GetTransactionParams extends TableFilter {
     filter?: string;
 }
 
-interface Transaction {
+export interface TransactionResponse {
     _id: string;
     type: {
       _id: string;
@@ -38,11 +38,36 @@ interface Transaction {
     amount: number;
     description: string;
     isDone: boolean;
-    date: string; // ISO 8601 date string
+    date: string;
   }
 
-export const getTransactions = async (params: GetTransactionParams): Promise<TableResponse<Transaction>> => {
-    return axiosInstance.get<TableResponse<Transaction>, any>('/v2/transactions', {
+export const getTransactions = async (params: GetTransactionParams): Promise<TableResponse<TransactionResponse>> => {
+    return axiosInstance.get<TableResponse<TransactionResponse>, any>('/v2/transactions', {
       params
     })
+}
+
+type BaseTransaction = {
+    _id: string; // Optional for creation
+    type: string;
+    category: string;
+    partner: string;
+    amount: number | string;
+    description?: string;
+    isDone?: boolean;
+    date?: string;
+}
+
+type CreateTransaction = Omit<BaseTransaction, '_id'>
+export const createTransactions = async (transaction: CreateTransaction) => {
+    return axiosInstance.post('/v2/transactions', transaction)
+}
+
+type UpdateTransaction = BaseTransaction
+export const updateTransactions = async (transaction: UpdateTransaction) => {
+    return axiosInstance.put(`/v2/transactions/${transaction._id}`, transaction)
+}
+
+export const deleteTransactions = async (id: string) => {
+    return axiosInstance.delete(`/v2/transactions/${id}`)
 }
