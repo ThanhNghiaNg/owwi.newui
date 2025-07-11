@@ -19,7 +19,7 @@ export interface GetTransactionParams extends TableFilter {
 
 export const getTransactions = async (params: GetTransactionParams): Promise<TableResponse<TransactionResponse>> => {
     return axiosInstance.get<TableResponse<TransactionResponse>, any>('/v2/transactions', {
-      params
+        params
     })
 }
 
@@ -46,4 +46,18 @@ export const updateTransaction = async (transaction: UpdateTransaction) => {
 
 export const deleteTransaction = async (id: string) => {
     return axiosInstance.delete(`/v2/transactions/${id}`)
+}
+
+type StatisticWeeklyResponse = {
+    labels: string[];
+    datasets: [
+        {
+            label: string;
+            data: number[];
+            backgroundColor: string;
+        }
+    ]
+}
+export const statisticWeekly = async () => {
+    return axiosInstance.get<any, StatisticWeeklyResponse>(`/v2/transactions/statistic/weekly`)
 }

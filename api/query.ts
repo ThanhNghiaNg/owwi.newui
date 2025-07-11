@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { getTransactionById, GetTransactionParams, getTransactions } from "./transaction";
+import { getTransactionById, GetTransactionParams, getTransactions, statisticWeekly } from "./transaction";
 import { getAllTypes, whoami } from "./user";
 import { Transaction } from "@/lib/types";
 import { getAllCategories } from "./category";
@@ -12,11 +12,10 @@ export const keys = {
     userWhoami: () => [...keys.all, 'user', 'whoami'],
     transaction: (id: string) => [...keys.all, 'transaction', id],
     transactions: () => [...keys.all, 'transactions'],
-    // transactions: (query: GetTransactionParams) => ['transaction', 'list', JSON.stringify(query)],
+    transactions_statistic_weekly: () => [...keys.transactions(), 'statistic', 'weekly'],
+    transactions_statistic_monthly: () => [...keys.transactions(), 'statistic', 'monthly'],
     category: (id: string) => [...keys.all, 'category', id],
-    // categories: (query: { page: number, pageSize: number }) => [...keys.all, 'category', 'list', query.page, query.pageSize],
     partner: (id: string) => [...keys.all, 'partner', id],
-    // partners: (query: { page: number, pageSize: number }) => [...keys.all, 'partner', 'list', query.page, query.pageSize],
     types: () => [...keys.all, 'types'],
     categories: () => [...keys.all, 'categories'],
     partners: () => [...keys.all, 'partners'],
@@ -67,6 +66,13 @@ export const query = {
             getNextPageParam: (lastPage: TableResponse<Transaction> | any) => {
                 return lastPage?.nextCursor || null
             },
-        })
+        }),
+        statistic: {
+            weekly: () =>
+                queryOptions({
+                    queryKey: keys.transactions_statistic_weekly(),
+                    queryFn: () => statisticWeekly(),
+                }),
+        }
     },
 };
