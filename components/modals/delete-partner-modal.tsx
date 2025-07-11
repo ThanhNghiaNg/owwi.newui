@@ -8,18 +8,18 @@ import { MEMO_MESSAGE } from "@/utils/constants/memo-messsage"
 import { DeleteModal } from "./delete-modal"
 import { AxiosError } from "axios"
 
-interface DeleteTransactionModalProps {
+interface DeletePartnerModalProps {
   isOpen: boolean,
   id: string,
   onClose: () => void
 }
 
-export function DeleteTransactionModal({ isOpen, id, onClose }: DeleteTransactionModalProps) {
-  const { mutateAsync: deleteTransactions, isPending } = mutation.transaction.delete()
+export function DeletePartnerModal({ isOpen, id, onClose }: DeletePartnerModalProps) {
+  const { mutateAsync: deletePartners, isPending } = mutation.partner.delete()
   const handleSubmit = async () => {
-    await deleteTransactions(id, {
+    await deletePartners(id, {
       onSuccess: (data) => {
-        toast.success(MEMO_MESSAGE.DELETED_SUCCESS("Transaction"))
+        toast.success(MEMO_MESSAGE.DELETED_SUCCESS("Partner"))
         onClose()
       },
       onError: (error) => {
@@ -27,8 +27,8 @@ export function DeleteTransactionModal({ isOpen, id, onClose }: DeleteTransactio
           toast.error(error.response.data.message)
           return
         }
-        console.error("Error adding transaction:", error)
-        toast.error(MEMO_MESSAGE.DELETED_FAILED("Transaction"))
+        console.error("Error deleting partner:", error)
+        toast.error(MEMO_MESSAGE.DELETED_FAILED("Partner"))
       }
     })
 
@@ -36,13 +36,13 @@ export function DeleteTransactionModal({ isOpen, id, onClose }: DeleteTransactio
 
   return (
     <DeleteModal
-      title="Delete transaction"
+      title="Delete partner"
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      enterLabel="Delete Transaction"
+      enterLabel="Delete Partner"
       isLoading={isPending}
-      content={<div className="text-center">Are you sure you want to delete this transaction?<br /> This action cannot be undone.</div>}
+      content={<div className="text-center">Are you sure you want to delete this partner?<br /> This action cannot be undone.</div>}
     />
   )
 }

@@ -7,9 +7,10 @@ import toast from "react-hot-toast"
 import { MEMO_MESSAGE } from "@/utils/constants/memo-messsage"
 import { TransactionModal } from "./transaction-modal"
 import { TransactionFormData } from "./types"
-import { TransactionResponse } from "@/api/transaction"
 import { TODAY } from "@/utils/constants/variables"
 import { formatDate } from "@/utils/formats/date"
+import { AxiosError } from "axios"
+import { TransactionResponse } from "@/api/types"
 
 interface EditTransactionModalProps {
   isOpen: boolean,
@@ -18,7 +19,7 @@ interface EditTransactionModalProps {
 }
 
 export function EditTransactionModal({ isOpen, transaction, onClose }: EditTransactionModalProps) {
-  const { mutateAsync: updateTransactions, isPending } = mutation.transactions.updateTransactions()
+  const { mutateAsync: updateTransactions, isPending } = mutation.transaction.update()
   const handleSubmit = async (formData: TransactionFormData, reset: () => void) => {
     await updateTransactions({
       _id: transaction._id,
@@ -30,6 +31,10 @@ export function EditTransactionModal({ isOpen, transaction, onClose }: EditTrans
         reset()
       },
       onError: (error) => {
+        if (error instanceof AxiosError && error.response?.data.message) {
+          toast.error(error.response.data.message)
+          return
+        }
         console.error("Error adding transaction:", error)
         toast.error(MEMO_MESSAGE.UPDATED_FAILED("Transaction"))
       }

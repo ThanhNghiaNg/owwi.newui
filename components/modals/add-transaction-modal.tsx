@@ -7,6 +7,7 @@ import toast from "react-hot-toast"
 import { MEMO_MESSAGE } from "@/utils/constants/memo-messsage"
 import { TransactionModal } from "./transaction-modal"
 import { TransactionFormData } from "./types"
+import { AxiosError } from "axios"
 
 interface AddTransactionModalProps {
   isOpen: boolean
@@ -14,7 +15,7 @@ interface AddTransactionModalProps {
 }
 
 export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProps) {
-  const { mutateAsync: createTransaction } = mutation.transactions.createTransactions()
+  const { mutateAsync: createTransaction } = mutation.transaction.create()
   const handleSubmit = async (formData: TransactionFormData, reset: () => void) => {
     await createTransaction(formData, {
       onSuccess: () => {
@@ -23,6 +24,10 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
         reset()
       },
       onError: (error) => {
+        if (error instanceof AxiosError && error.response?.data.message) {
+          toast.error(error.response.data.message)
+          return
+        }
         console.error("Error adding transaction:", error)
         toast.error(MEMO_MESSAGE.CREATED_FAILED("Transaction"))
       }

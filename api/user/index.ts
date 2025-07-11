@@ -1,4 +1,6 @@
 import { axiosInstance } from "../axios"
+import { TypeResponse } from "../types";
+
 
 type UserLoginResponse = {
     sessionToken: string;
@@ -23,4 +25,10 @@ type WhoamiResponse = {
 }
 export const whoami = async () => {
     return axiosInstance.get("/whoami");
+}
+
+
+type AllTypeResponse = TypeResponse[]
+export const getAllTypes = async (): Promise<AllTypeResponse> => {
+    return axiosInstance.get<AllTypeResponse, any>('/user/type/all');
 }

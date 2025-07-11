@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,14 +13,16 @@ import { formatDate } from "@/utils/formats/date"
 import TableLoadMore from "@/components/table/pagination"
 import { usePagination } from "@/components/table/usePagination"
 import { EditTransactionModal } from "@/components/modals/edit-transaction-modal"
-import { TransactionResponse } from "@/api/transaction"
 import { DeleteTransactionModal } from "@/components/modals/delete-transaction-modal"
+import { getTypeColor } from "@/utils/constants/styles"
+import { DotLoader } from "@/components/ui/skeleton/dot-loader"
+import { TransactionResponse } from "@/api/types"
 
 const tabs = ["All", "Revenue", "Expenses", "Loan", "Borrow"]
 
 function TransactionsPage() {
   const pagination = usePagination()
-  const { cursor, limit, setCursor, setLimit } = pagination
+  const { limit, setLimit } = pagination
 
   const {
     data,
@@ -36,23 +38,7 @@ function TransactionsPage() {
   const [editTransaction, setEditTransaction] = useState<TransactionResponse | null>(null)
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("")
 
-  const getTypeColor = (type: string) => {
-    switch (type.toLowerCase()) {
-      case "income":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-      case "outcome":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
-      case "loan":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
-      case "borrow":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
-    }
-  }
-
-  const pages = data?.pages
-  const tableData = pages?.flatMap(page => page.data) || []
+  const tableData = useMemo(() => data?.pages?.flatMap(page => page.data) || [], [data?.pages])
 
   const onDeleteTransaction = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const transactionId = e.currentTarget.dataset.id
@@ -72,8 +58,7 @@ function TransactionsPage() {
 
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
-      {isRefetching &&
-        <div className="loader-dots absolute inset-1/2 -translate-x-1/2 -translate-y-1/2" />}
+      <DotLoader isShow={isRefetching} />
       <Header title="Transactions" breadcrumbs={[{ name: "Transactions" }]} />
 
       <div className="p-6">
@@ -164,7 +149,10 @@ function TransactionsPage() {
           </CardContent>
         </Card>
       </div>
-      <AddTransactionModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+      <AddTransactionModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
       {
         editTransaction &&
         <EditTransactionModal

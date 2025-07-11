@@ -1,10 +1,11 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { getTransactionById, GetTransactionParams, getTransactions, TableResponse } from "./transaction";
-import { whoami } from "./user";
+import { getTransactionById, GetTransactionParams, getTransactions } from "./transaction";
+import { getAllTypes, whoami } from "./user";
 import { Transaction } from "@/lib/types";
-import { getAllTypes } from "./types";
 import { getAllCategories } from "./category";
 import { getAllPartners } from "./partners";
+import { FIVE_MINUTE_MILL, ONE_HOUR_MILL } from "@/utils/constants/variables";
+import { TableResponse } from "./types";
 export const keys = {
     all: ['all'],
     user: ['user'],
@@ -27,8 +28,7 @@ export const query = {
             queryKey: keys.userWhoami(),
             queryFn: whoami,
             staleTime(query) {
-                // 1 hour
-                return 1000 * 60 * 60;
+                return ONE_HOUR_MILL;
             },
         })
     },
@@ -36,21 +36,21 @@ export const query = {
         getAll: () => queryOptions({
             queryKey: keys.types(),
             queryFn: getAllTypes,
-            staleTime: 1000 * 60 * 60, // 1 hour
+            staleTime: ONE_HOUR_MILL,
         })
     },
     category: {
         getAll: () => queryOptions({
             queryKey: keys.categories(),
             queryFn: getAllCategories,
-            staleTime: 1000 * 60 * 60, // 1 hour
+            staleTime: ONE_HOUR_MILL,
         })
     },
     partner: {
         getAll: () => queryOptions({
             queryKey: keys.partners(),
             queryFn: getAllPartners,
-            staleTime: 1000 * 60 * 60, // 1 hour
+            staleTime: ONE_HOUR_MILL,
         })
     },
     transaction: {
@@ -63,7 +63,7 @@ export const query = {
             queryKey: keys.transactions(),
             queryFn: ({ pageParam }: { pageParam: string | null }) => getTransactions({ cursor: pageParam, ...query }),
             initialPageParam: null,
-            staleTime: 1000 * 60 * 5, // 5 minutes
+            staleTime: FIVE_MINUTE_MILL, // 5 minutes
             getNextPageParam: (lastPage: TableResponse<Transaction> | any) => {
                 return lastPage?.nextCursor || null
             },
