@@ -1,4 +1,6 @@
 import { axiosInstance } from "../axios"
+import { TypeResponse } from "../types";
+
 
 type UserLoginResponse = {
     sessionToken: string;
@@ -14,6 +16,13 @@ export const userLogin = async (params: {username: string, password: string}): P
     });
 }
 
+export const userLogout = async (params: {username: string, password: string}): Promise<UserLoginResponse> => {
+    return axiosInstance.post<UserLoginResponse, any>(`/logout`, {
+        ...params,
+        role: "user"
+    });
+}
+
 export const userRegister = async (params: {username: string, password: string}) => {
     return axiosInstance.post(`/register`, params);
 }
@@ -23,4 +32,10 @@ type WhoamiResponse = {
 }
 export const whoami = async () => {
     return axiosInstance.get("/whoami");
+}
+
+
+type AllTypeResponse = TypeResponse[]
+export const getAllTypes = async (): Promise<AllTypeResponse> => {
+    return axiosInstance.get<AllTypeResponse, any>('/user/type/all');
 }

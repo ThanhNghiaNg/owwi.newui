@@ -26,7 +26,6 @@ function LoginPage() {
     const { mutateAsync: login, isPending } = mutation.user.login()
 
     useEffect(() => {
-        console.log(isAuth)
         if (isAuth) {
             // Redirect to dashboard if already authenticated
             router.push(ROUTES.HOME)
@@ -41,13 +40,12 @@ function LoginPage() {
                 username: formData.email,
                 password: formData.password,
             })
-            console.log(res)
             if (res.sessionToken) {
                 localStorage.setItem(SESSION_ID, res.sessionToken)
                 router.push(ROUTES.HOME)
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
     }
 

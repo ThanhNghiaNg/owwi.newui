@@ -1,6 +1,6 @@
-export function formatDate(isoDateString: string, format= 'dd/mm/yyyy'): string {
+export function formatDate(isoDateString: string, format = 'dd/mm/yyyy', jointer = '/'): string {
     const date = new Date(isoDateString);
-    
+
     // Get day, month, and year in local timezone (+07:00)
     const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so +1
@@ -21,6 +21,6 @@ export function formatDate(isoDateString: string, format= 'dd/mm/yyyy'): string 
             default:
                 throw new Error(`Unsupported format part: ${part}`);
         }
-    })    
-    return result.join('/');
-  }
+    })
+    return result.join(jointer);
+}
