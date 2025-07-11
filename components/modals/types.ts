@@ -14,3 +14,9 @@ export type PartnerFormData = {
   type: string;
   description?: string;
 }
+
+export type CategoryFormData = {
+  name: string;
+  type: string;
+  description?: string;
+}

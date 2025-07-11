@@ -7,7 +7,7 @@ export const getAllCategories = async (): Promise<AllCategoryResponse> => {
 }
 
 type BaseCategory = {
-    _id: string; 
+    id: string; 
     name: string;
     type: string;
     description?: string;
@@ -20,7 +20,7 @@ export const createCategory = async (category: CreateCategory) => {
 
 type UpdateCategory = BaseCategory
 export const updateCategory = async (category: UpdateCategory) => {
-    return axiosInstance.put(`/v2/categories/${category._id}`, category)
+    return axiosInstance.put(`/v2/categories/${category.id}`, category)
 }
 
 export const deleteCategory = async (id: string) => {

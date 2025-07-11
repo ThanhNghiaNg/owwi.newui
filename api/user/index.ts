@@ -16,6 +16,13 @@ export const userLogin = async (params: {username: string, password: string}): P
     });
 }
 
+export const userLogout = async (params: {username: string, password: string}): Promise<UserLoginResponse> => {
+    return axiosInstance.post<UserLoginResponse, any>(`/logout`, {
+        ...params,
+        role: "user"
+    });
+}
+
 export const userRegister = async (params: {username: string, password: string}) => {
     return axiosInstance.post(`/register`, params);
 }

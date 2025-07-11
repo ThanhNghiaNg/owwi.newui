@@ -1,14 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
-import { userLogin, userRegister } from "./user";
+import { userLogin, userLogout, userRegister } from "./user";
 import { createTransaction, deleteTransaction, updateTransaction } from "./transaction";
 import queryClient from "./queryClient";
 import { keys as queryKeys } from "./query";
 import { createPartner, deletePartner, updatePartner } from "./partners";
+import { createCategory, deleteCategory, updateCategory } from "./category";
 
 export const MutationKey = {
   user: {
     mutation: ["user-mutation"],
     login: () => [...MutationKey.user.mutation, "login"],
+    logout: () => [...MutationKey.user.mutation, "logout"],
     register: () => [...MutationKey.user.mutation, "register"],
   },
   transaction: {
@@ -37,6 +39,16 @@ export const mutation = {
       useMutation({
         mutationKey: MutationKey.user.login(),
         mutationFn: userLogin,
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [queryKeys.all],
+          });
+        }
+      }),
+    logout: () =>
+      useMutation({
+        mutationKey: MutationKey.user.logout(),
+        mutationFn: userLogout,
       }),
     register: () =>
       useMutation({
@@ -98,6 +110,35 @@ export const mutation = {
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: queryKeys.partners()
+        })
+      }
+    })
+  },
+  category: {
+    create: () => useMutation({
+      mutationKey: MutationKey.category.create(),
+      mutationFn: createCategory,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.categories()
+        })
+      }
+    }),
+    update: () => useMutation({
+      mutationKey: MutationKey.category.update(),
+      mutationFn: updateCategory,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.categories()
+        })
+      }
+    }),
+    delete: () => useMutation({
+      mutationKey: MutationKey.category.delete(),
+      mutationFn: deleteCategory,
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.categories()
         })
       }
     })
