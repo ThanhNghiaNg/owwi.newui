@@ -1,5 +1,5 @@
 import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
-import { getTransactionById, GetTransactionParams, getTransactions, statisticWeekly } from "./transaction";
+import { getTransactionById, GetTransactionParams, getTransactions, statisticMonthly, statisticWeekly } from "./transaction";
 import { getAllTypes, whoami } from "./user";
 import { Transaction } from "@/lib/types";
 import { getAllCategories } from "./category";
@@ -72,6 +72,11 @@ export const query = {
                 queryOptions({
                     queryKey: keys.transactions_statistic_weekly(),
                     queryFn: () => statisticWeekly(),
+                }),
+            monthly: () =>
+                queryOptions({
+                    queryKey: keys.transactions_statistic_monthly(),
+                    queryFn: () => statisticMonthly(),
                 }),
         }
     },

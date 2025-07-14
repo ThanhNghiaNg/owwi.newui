@@ -46,12 +46,21 @@ import { useRouter } from 'next/navigation';
 import React, { JSX, useEffect } from 'react';
 
 // Implementation
-function ClientWrapper({children}: { children: React.ReactNode }):  JSX.Element {
+function ClientWrapper({ children }: { children: React.ReactNode }): JSX.Element {
   const router = useRouter();
-  useEffect(()=>{
+  const [isSettingUp, setIsSettingUp] = React.useState(true);
+  useEffect(() => {
+    // Setup Axios interceptors
+    setIsSettingUp(true);
     setupAxiosInterceptors(router, axiosInstance);
     setupAxiosInterceptors(router, axiosHomeInstance);
-  },[])
+    setIsSettingUp(false);
+  }, [])
+
+  if (isSettingUp) {
+    return <></>
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       {children}

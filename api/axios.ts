@@ -8,10 +8,6 @@ export const axiosInstance = axios.create({
     withCredentials: true,
 })
 
-axiosInstance.interceptors.response.use(
-    (response) => response.data,
-);
-
 // note: dùng post message thay cho router push interceptors
 
 export const axiosHomeInstance = axios.create({

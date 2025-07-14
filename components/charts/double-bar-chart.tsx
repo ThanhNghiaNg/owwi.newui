@@ -1,5 +1,6 @@
 "use client"
 
+import { SMALL_SCREEN_WIDTH } from "@/utils/constants/variables"
 import { currency, decimal } from "@/utils/formats/number"
 import { useMemo } from "react"
 
@@ -26,26 +27,31 @@ export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3F
   const chartHeight = height - 80 // Leave space for labels
   const barWidth = (chartWidth / flattenData.length) * 0.6
   const barSpacing = chartWidth / flattenData.length * 2
+  const isSmallScreen = window.screen.width < SMALL_SCREEN_WIDTH
 
   return (
     <div className="w-full">
       <svg width="100%" height={height} viewBox={`0 0 ${chartWidth} ${height}`} className="overflow-visible">
         {/* Grid lines */}
-        {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => (
-          <g key={index}>
-            <line
-              x1={40}
-              y1={40 + chartHeight * ratio}
-              x2={chartWidth - 20}
-              y2={40 + chartHeight * ratio}
-              stroke="#E5E7EB"
-              strokeDasharray="3 3"
-            />
-            <text x={35} y={45 + chartHeight * ratio} textAnchor="end" fontSize="12" fill="#6B7280">
-              {decimal(Math.round(maxValueRounded * (1 - ratio)))}
-            </text>
-          </g>
-        ))}
+        {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
+          const value = decimal((Math.round(maxValueRounded * (1 - ratio))) / (isSmallScreen ? 1000 : 1))
+          const suffix = isSmallScreen ? 'K' : ""
+          return (
+            <g key={index}>
+              <line
+                x1={40}
+                y1={40 + chartHeight * ratio}
+                x2={chartWidth - 20}
+                y2={40 + chartHeight * ratio}
+                stroke="#E5E7EB"
+                strokeDasharray="3 3"
+              />
+              <text x={35} y={45 + chartHeight * ratio} textAnchor="end" fontSize="12" fill="#6B7280">
+                {value + suffix}
+              </text>
+            </g>
+          )
+        })}
 
         {/* Bars */}
         {datasets.map((dataset, datasetIndex) => {
