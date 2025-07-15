@@ -6,25 +6,28 @@ import { useMemo } from "react"
 
 interface BarChartData {
   label: string
-  value: number
+  data: number[]
+  backgroundColor?: string
 }
 
 interface BarChartProps {
-  data: BarChartData[]
+  datasets: BarChartData[]
   height?: number
   color?: string
+  labels: string[]
 }
 
 const SMOOTHING_FACTOR = 100000
 
-export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProps) {
-  const isSmallScreen = window.screen.width < SMALL_SCREEN_WIDTH
-  const maxValue = useMemo(() => Math.max(...data.map((d) => d.value)), [data])
+export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3FC" }: BarChartProps) {
+  const flattenData = useMemo(() => datasets?.flatMap(page => page.data) || [], [datasets])
+  const maxValue = useMemo(() => Math.max(...flattenData), [flattenData])
   const maxValueRounded = Math.ceil(maxValue / SMOOTHING_FACTOR) * SMOOTHING_FACTOR
   const chartWidth = Math.min(window.screen.width - 100, 475)
   const chartHeight = height - 80 // Leave space for labels
-  const barWidth = (chartWidth / data.length) * 0.6
-  const barSpacing = chartWidth / data.length
+  const barWidth = (chartWidth / flattenData.length) * 0.6
+  const barSpacing = chartWidth / flattenData.length * 2
+  const isSmallScreen = window.screen.width < SMALL_SCREEN_WIDTH
 
   return (
     <div className="w-full">
@@ -33,7 +36,6 @@ export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProp
         {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
           const value = decimal((Math.round(maxValueRounded * (1 - ratio))) / (isSmallScreen ? 1000 : 1))
           const suffix = isSmallScreen ? 'K' : ""
-
           return (
             <g key={index}>
               <line
@@ -52,33 +54,37 @@ export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProp
         })}
 
         {/* Bars */}
-        {data.map((item, index) => {
-          const barHeight = (item.value / maxValueRounded) * chartHeight
-          const x = 40 + index * barSpacing + (barSpacing - barWidth) / 2
-          const y = 40 + chartHeight - barHeight
+        {datasets.map((dataset, datasetIndex) => {
+          return dataset.data.map((value, index) => {
+            const barHeight = (value / maxValueRounded) * chartHeight
+            const x = 40 + index * barSpacing + (barSpacing - barWidth) / 2 + barWidth * datasetIndex
+            const y = 40 + chartHeight - barHeight
 
-          return (
-            <g key={item.label}>
-              <rect
-                x={x}
-                y={y}
-                width={barWidth}
-                height={barHeight}
-                fill={color}
-                stroke="#0EA5E9"
-                strokeWidth={1}
-                rx={4}
-                className="hover:opacity-80 transition-opacity"
-              />
-              <text x={x + barWidth / 2} y={40 + chartHeight + 20} textAnchor="middle" fontSize="12" fill="#6B7280">
-                {item.label}
-              </text>
-              {/* Value on hover */}
-              <title>{`${item.label}: ${currency(item.value)}`}</title>
-            </g>
-          )
+            return (
+              <g key={`${datasetIndex}-${index}`}>
+                <rect
+                  x={x}
+                  y={y}
+                  width={barWidth}
+                  height={barHeight}
+                  fill={dataset.backgroundColor || color}
+                  stroke="#0EA5E9"
+                  strokeWidth={1}
+                  rx={4}
+                  className="hover:opacity-80 transition-opacity"
+                />
+                {datasetIndex === 0 && (
+                  <text x={x + barWidth} y={40 + chartHeight + 20} textAnchor="middle" fontSize="12" fill="#6B7280">
+                    {labels[index]}
+                  </text>)
+                }
+
+                {/* Value on hover */}
+                <title>{`${dataset.label}: ${currency(value)}`}</title>
+              </g>
+            )
+          })
         })}
-
         {/* Axes */}
         <line x1={40} y1={40} x2={40} y2={40 + chartHeight} stroke="#6B7280" strokeWidth={1} />
         <line

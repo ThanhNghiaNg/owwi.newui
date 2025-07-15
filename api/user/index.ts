@@ -31,11 +31,11 @@ type WhoamiResponse = {
     isLoggedIn: boolean;
 }
 export const whoami = async () => {
-    return axiosInstance.get("/whoami");
+    return axiosInstance.get<any, WhoamiResponse>("/whoami");
 }
 
 
 type AllTypeResponse = TypeResponse[]
 export const getAllTypes = async (): Promise<AllTypeResponse> => {
-    return axiosInstance.get<AllTypeResponse, any>('/user/type/all');
+    return axiosInstance.get<any, AllTypeResponse>('/user/type/all');
 }

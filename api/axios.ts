@@ -8,6 +8,8 @@ export const axiosInstance = axios.create({
     withCredentials: true,
 })
 
+// note: dùng post message thay cho router push interceptors
+
 export const axiosHomeInstance = axios.create({
     baseURL: "/api",
     headers: {

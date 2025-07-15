@@ -14,7 +14,7 @@ import TableLoadMore from "@/components/table/pagination"
 import { usePagination } from "@/components/table/usePagination"
 import { EditTransactionModal } from "@/components/modals/edit-transaction-modal"
 import { DeleteTransactionModal } from "@/components/modals/delete-transaction-modal"
-import { getTypeColor } from "@/utils/constants/styles"
+// import { getTypeColor } from "@/utils/constants/styles"
 import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { TransactionResponse } from "@/api/types"
 
@@ -55,6 +55,22 @@ function TransactionsPage() {
       setEditTransaction(transaction)
     }
   }, [tableData])
+
+  const getTypeColor = (type: string) => {
+  
+    switch (type.toLowerCase()) {
+      case "income":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+      case "outcome":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+      case "loan":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300"
+      case "borrow":
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300"
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+    }
+  }
 
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
@@ -122,7 +138,7 @@ function TransactionsPage() {
                       <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.category.name}</td>
                       <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.partner.name}</td>
                       <td className="py-3 px-4">
-                        <Badge className={getTypeColor(transaction.type.name)}>{transaction.type.name}</Badge>
+                        <Badge className={`${getTypeColor(transaction.type.name)}`}>{transaction.type.name}</Badge>
                       </td>
                       <td className="py-3 px-4 text-gray-900 dark:text-white">{formatDate(transaction.date, "dd/mm/yyyy")}</td>
                       <td className="py-3 px-4 text-gray-900 dark:text-white">
