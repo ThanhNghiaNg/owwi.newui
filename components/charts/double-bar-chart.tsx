@@ -41,7 +41,7 @@ export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3F
               <line
                 x1={40}
                 y1={40 + chartHeight * ratio}
-                x2={chartWidth - 20}
+                x2={chartWidth + 40}
                 y2={40 + chartHeight * ratio}
                 stroke="#E5E7EB"
                 strokeDasharray="3 3"

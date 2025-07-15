@@ -19,7 +19,7 @@ export function ExpenseChart() {
     <Card className="w-full">
       <CardHeader className="pb-4">
         <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white flex justify-between">
-          <p>Weekly Expenses</p>
+          <p>{selectedPeriod === "monthly" ? "Monthly" : 'Weekly'} Expenses</p>
           <select
             onChange={(e) => { setSelectedPeriod(e.target.value as SelectionPeriod) }}
             defaultValue="weekly"
@@ -30,7 +30,7 @@ export function ExpenseChart() {
             {/* <option value="yearly">Yearly</option> */}
           </select>
         </CardTitle>
-        <p className="text-sm text-gray-600 dark:text-gray-400">Expense comparison over recent weekly</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">Expense comparison over recent {selectedPeriod === "monthly" ? "monthly" : 'weekly'}</p>
       </CardHeader>
       <CardContent className="p-6 px-0 pt-0 relative">
         <div className="h-[250px] sm:h-[300px] w-full relative -left-4">

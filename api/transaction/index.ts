@@ -69,3 +69,12 @@ type StatisticMonthlyResponse = Array<{
 export const statisticMonthly = async () => {
     return axiosInstance.get<any, StatisticMonthlyResponse>(`/v2/transactions/statistic/monthly`)
 }
+
+type StatisticMonthResponse = Array<{
+    name: string;
+    totalAmount: number;
+    color: string;
+}>
+export const statisticMonth = async (month: number) => {
+    return axiosInstance.get<any, StatisticMonthResponse>(`/v2/transactions/statistic/month?month=${month}`)
+}

@@ -1,5 +1,6 @@
 "use client"
 
+import { currency } from "@/utils/formats/number"
 import { useMemo } from "react"
 
 interface PieChartData {
@@ -15,7 +16,7 @@ interface PieChartProps {
 
 export function PieChart({ data, size = 300 }: PieChartProps) {
   const total = useMemo(() => data.reduce((sum, item) => sum + item.value, 0), [data])
-  const radius = size / 2 - 40
+  const radius = size / 2 - 10
   const centerX = size / 2
   const centerY = size / 2
 
@@ -75,7 +76,7 @@ export function PieChart({ data, size = 300 }: PieChartProps) {
               strokeWidth={2}
               className="hover:opacity-80 transition-opacity cursor-pointer"
             >
-              <title>{`${slice.name}: ${slice.value} (${slice.percentage}%)`}</title>
+              <title>{`${slice.name}: ${currency(slice.value)} (${slice.percentage}%)`}</title>
             </path>
             {slice.percentage > 5 && (
               <text
@@ -95,7 +96,7 @@ export function PieChart({ data, size = 300 }: PieChartProps) {
       </svg>
 
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap justify-center gap-4">
+      <div className="mt-2 flex flex-wrap justify-center gap-4">
         {data.map((item) => (
           <div key={item.name} className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
