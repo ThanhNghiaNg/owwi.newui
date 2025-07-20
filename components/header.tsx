@@ -1,5 +1,7 @@
 "use client"
 
+import { mutation } from "@/api/mutate";
+import { SESSION_ID } from "@/utils/constants/keys";
 import { useState } from "react"
 
 interface HeaderProps {
@@ -9,6 +11,17 @@ interface HeaderProps {
 
 export function Header({ title, breadcrumbs = [] }: HeaderProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+  const { mutateAsync: logout } = mutation.user.logout(
+    () => {
+      setIsUserMenuOpen(false)
+      window.location.href = "/login"
+      localStorage.removeItem(SESSION_ID)
+    },
+    () => {
+      setIsUserMenuOpen(false)
+      window.location.href = "/login"
+      console.error("Logout failed")
+    })
 
   return (
     <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 ml-0 lg:ml-0">
@@ -52,7 +65,10 @@ export function Header({ title, breadcrumbs = [] }: HeaderProps) {
               <button className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                 Settings
               </button>
-              <button className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+              <button
+                className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                onClick={() => logout()}
+              >
                 Logout
               </button>
             </div>

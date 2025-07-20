@@ -20,7 +20,7 @@ interface BarChartProps {
 const SMOOTHING_FACTOR = 100000
 
 export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3FC" }: BarChartProps) {
-  const flattenData = useMemo(() => datasets?.flatMap(page => page.data) || [], [datasets])
+  const flattenData = useMemo(() => datasets?.flatMap(page => page?.data) || [], [datasets])
   const maxValue = useMemo(() => Math.max(...flattenData), [flattenData])
   const maxValueRounded = Math.ceil(maxValue / SMOOTHING_FACTOR) * SMOOTHING_FACTOR
   const chartWidth = Math.min(window.screen.width - 100, 475)

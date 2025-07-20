@@ -27,19 +27,19 @@ export const setupAxiosInterceptors = (router: AppRouterInstance, axiosInstance:
                     clearTimeout(toastTimeout);
                 }
                 showToastTimeout(ERROR_MESSAGE.UNAUTHORIZED);
-                return;
+                throw error;
             }
             if (error.status === 500) {
                 showToastTimeout(ERROR_MESSAGE.SYSTEM_ERROR);
-                return;
+                throw error;
             }
             throw error;
         }
     );
 
-    axiosInstance.interceptors.request.use((req)=>{
+    axiosInstance.interceptors.request.use((req) => {
         const sessionId = localStorage.getItem(SESSION_ID) || ''
-        if (sessionId){
+        if (sessionId) {
             req.headers['Bearer'] = sessionId;
         }
         return req;

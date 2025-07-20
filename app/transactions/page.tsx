@@ -38,7 +38,7 @@ function TransactionsPage() {
   const [editTransaction, setEditTransaction] = useState<TransactionResponse | null>(null)
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("")
 
-  const tableData = useMemo(() => data?.pages?.flatMap(page => page.data) || [], [data?.pages])
+  const tableData = useMemo(() => data?.pages?.flatMap(page => page?.data) || [], [data?.pages])
 
   const onDeleteTransaction = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const transactionId = e.currentTarget.dataset.id

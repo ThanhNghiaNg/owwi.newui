@@ -13,7 +13,7 @@ type BaseCategory = {
     description?: string;
 }
 
-type CreateCategory = Omit<BaseCategory, '_id'>
+type CreateCategory = Omit<BaseCategory, 'id'>
 export const createCategory = async (category: CreateCategory) => {
     return axiosInstance.post('/v2/categories', category)
 }
