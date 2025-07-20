@@ -22,7 +22,7 @@ function LoginPage() {
         password: "",
         rememberMe: false,
     })
-    
+
     const { mutateAsync: login, isPending } = mutation.user.login()
 
     useEffect(() => {
@@ -36,6 +36,8 @@ function LoginPage() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         try {
             e.preventDefault()
+            const form = new FormData(e.currentTarget)
+            const formData = Object.fromEntries(form.entries()) as Record<string, string>
             const res = await login({
                 username: formData.email,
                 password: formData.password,
@@ -82,10 +84,9 @@ function LoginPage() {
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">📧</span>
                                     <Input
+                                        name="email"
                                         type="email"
                                         placeholder="Enter your email"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         className="pl-12 h-12 border-2 focus:border-sky-500 transition-colors"
                                         autoComplete="email"
                                         aria-label="Email Address"
@@ -100,10 +101,9 @@ function LoginPage() {
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">🔒</span>
                                     <Input
+                                        name="password"
                                         type="password"
                                         placeholder="Enter your password"
-                                        value={formData.password}
-                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         className="pl-12 h-12 border-2 focus:border-sky-500 transition-colors"
                                         autoComplete="current-password"
                                         aria-label="Password"

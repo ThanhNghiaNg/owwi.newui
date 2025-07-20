@@ -45,10 +45,12 @@ export const mutation = {
           });
         }
       }),
-    logout: () =>
+    logout: (onSuccess: () => void, onError: () => void) =>
       useMutation({
         mutationKey: MutationKey.user.logout(),
         mutationFn: userLogout,
+        onSuccess,
+        onError,
       }),
     register: () =>
       useMutation({

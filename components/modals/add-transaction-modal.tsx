@@ -36,6 +36,12 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
   }
 
   return (
-    <TransactionModal title="Add new transaction" isOpen={isOpen} onClose={onClose} onSubmit={handleSubmit} enterLabel="Add Transaction" />
+    <TransactionModal
+      title="Add new transaction"
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+      enterLabel="Add Transaction"
+    />
   )
 }
