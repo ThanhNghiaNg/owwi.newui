@@ -2,7 +2,7 @@
 
 import { SMALL_SCREEN_WIDTH } from "@/utils/constants/variables"
 import { currency, decimal } from "@/utils/formats/number"
-import { useCallback, useMemo, useRef } from "react"
+import { useCallback, useId, useMemo, useRef } from "react"
 
 interface BarChartData {
   label: string
@@ -23,6 +23,7 @@ export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3F
   const flattenData = useMemo(() => datasets?.flatMap(page => page?.data) || [], [datasets])
   const maxValue = useMemo(() => Math.max(...flattenData), [flattenData])
   const svgRef = useRef<SVGSVGElement>(null)
+  const tooltipId = useId()
   const maxValueRounded = Math.ceil(maxValue / SMOOTHING_FACTOR) * SMOOTHING_FACTOR
   const chartWidth = Math.min(window.screen.width - 100, 475)
   const chartHeight = height - 80 // Leave space for labels
@@ -42,7 +43,7 @@ export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3F
 
       // Get tooltip data
       const dataTooltip = event.currentTarget.dataset.tooltip;
-      const tooltip = document.getElementById("tooltip");
+      const tooltip = document.getElementById(tooltipId);
 
       if (tooltip && dataTooltip) {
         // Create tooltip content
@@ -75,18 +76,19 @@ export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3F
         tooltip.style.opacity = "1";
       }
     }
-  }, []);
+  }, [tooltipId]);
 
   const onHideToolTip = useCallback(() => {
-    const tooltip = document.getElementById("tooltip")
+    const tooltip = document.getElementById(tooltipId)
     if (tooltip) {
       tooltip.style.opacity = "0"
       tooltip.textContent = ""
     }
-  }, [])
+  }, [tooltipId])
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
+      <div id={tooltipId} className="absolute opacity-0 w-max bg-gray-800 text-white p-2 rounded shadow-lg"></div>
       <svg width="100%" height={height} viewBox={`0 0 ${chartWidth} ${height}`} className="overflow-visible" ref={svgRef}>
         {/* Grid lines */}
         {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {

@@ -83,7 +83,7 @@ export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProp
 
   return (
     <div className="w-full relative">
-      <div id="tooltip" className="absolute opacity-0 w-max bg-gray-800 text-white p-2 rounded shadow-lg">ahihi</div>
+      <div id="tooltip" className="absolute opacity-0 w-max bg-gray-800 text-white p-2 rounded shadow-lg"></div>
       <svg width="100%" height={height} viewBox={`0 0 ${chartWidth} ${height}`} className="overflow-visible" ref={svgRef}>
         {/* Grid lines */}
         {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
