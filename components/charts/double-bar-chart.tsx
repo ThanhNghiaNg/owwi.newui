@@ -15,15 +15,15 @@ interface BarChartProps {
   height?: number
   color?: string
   labels: string[]
+  tooltipId: string
 }
 
 const SMOOTHING_FACTOR = 100000
 
-export function DoubleBarChart({ datasets, labels, height = 300, color = "#7DD3FC" }: BarChartProps) {
+export function DoubleBarChart({ tooltipId, datasets, labels, height = 300, color = "#7DD3FC" }: BarChartProps) {
   const flattenData = useMemo(() => datasets?.flatMap(page => page?.data) || [], [datasets])
   const maxValue = useMemo(() => Math.max(...flattenData), [flattenData])
   const svgRef = useRef<SVGSVGElement>(null)
-  const tooltipId = useId()
   const maxValueRounded = Math.ceil(maxValue / SMOOTHING_FACTOR) * SMOOTHING_FACTOR
   const chartWidth = Math.min(window.screen.width - 100, 475)
   const chartHeight = height - 80 // Leave space for labels

@@ -41,7 +41,7 @@ export const mutation = {
         mutationFn: userLogin,
         onSuccess: () => {
           queryClient.invalidateQueries({
-            queryKey: [queryKeys.all],
+            queryKey: [queryKeys.all, queryKeys.userWhoami()],
           });
         }
       }),

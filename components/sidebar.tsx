@@ -6,6 +6,11 @@ import { useState } from "react"
 import { useTheme } from "@/contexts/theme-context"
 import { BookUser, ChartNoAxesCombined, LogOut, Menu, Moon, NotebookPen, Settings, Sun, Tag } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
+import { mutation } from "@/api/mutate"
+import { SESSION_ID } from "@/utils/constants/keys"
+import { useRouter } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
+import { query } from "@/api/query"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: <ChartNoAxesCombined /> },
@@ -25,21 +30,34 @@ export function Sidebar() {
   const pathname = usePathname()
   const { theme, toggleTheme } = useTheme()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { isAuth } = useAuth()
+  const { data: res } = useQuery(query.user.whoami())
+  const isAuth = res?.isLoggedIn
+  const router = useRouter()
+  const { mutateAsync: logout } = mutation.user.logout(
+    () => {
+      // router.push('/login')
+      window.location.href = '/login'
+      localStorage.removeItem(SESSION_ID)
+    },
+    () => {
+      // router.push('/login')
+      window.location.href = '/login'
+      console.error("Logout failed")
+    })
 
   return (
     <>
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
-        <nav className="flex-1 px-3 sm:px-1 py-1">
-          <ul className="flex justify-between space-y-1 sm:space-y-2">
+        <nav className="flex-1 px-6 py-1">
+          <ul className="flex justify-between">
             {mobileNavigation.map((item) => {
               const isActive = pathname === item.href
               return (
-                <li key={item.name}>
+                <li key={item.name} >
                   <Link
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(item.name === "More")}
-                    className={`flex flex-col items-center gap-1 rounded-lg p-2 text-sm font-medium transition-colors ${isActive
+                    className={`flex flex-col items-center justify-stretch gap-1 rounded-lg w-[100px] p-2 text-sm font-medium transition-colors ${isActive
                       ? "bg-sky-600 text-white shadow-sm"
                       : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                       }`}
@@ -116,7 +134,10 @@ export function Sidebar() {
 
         {/* Logout */}
         {isAuth && <div className="px-3 sm:px-4 pb-4 border-t border-gray-200 dark:border-gray-700 pt-4">
-          <button className="w-full flex items-center justify-start gap-3 px-3 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-900/20 rounded-lg transition-colors">
+          <button
+            className="w-full flex items-center justify-start gap-3 px-3 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-900/20 rounded-lg transition-colors"
+            onClick={() => logout()}
+          >
             <span className="text-lg"><LogOut /></span>
             <span className="truncate">Logout</span>
           </button>

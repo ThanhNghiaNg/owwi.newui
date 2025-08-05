@@ -180,6 +180,9 @@ export const PieChart = React.memo(({ data, size = 300 }: PieChartProps) => {
             <span className="text-sm text-gray-700 dark:text-gray-300">{item.name}</span>
           </div>
         ))}
+        <div className="w-full text-center">
+          Total: {currency(total)}
+        </div>
       </div>
     </div>
   )
