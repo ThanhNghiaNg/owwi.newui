@@ -14,6 +14,7 @@ import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { CategoryResponse } from "@/api/types"
 import { EditCategoryModal } from "@/components/modals/edit-category-modal"
 import { DeleteCategoryModal } from "@/components/modals/delete-category-modal"
+import { Building, User } from "lucide-react"
 
 export default function CategoriesPage() {
   const { data: categories = [], isRefetching } = useQuery(query.category.getAll())
@@ -85,7 +86,7 @@ export default function CategoriesPage() {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                            <span className="text-sm">{category.type.name === "company" ? "🏢" : "👤"}</span>
+                            <span className="text-sm">{category.type.name === "company" ? <Building/> : <User />}</span>
                           </div>
                           <span className="text-gray-900 dark:text-white">{category.name}</span>
                         </div>

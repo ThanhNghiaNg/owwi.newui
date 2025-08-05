@@ -34,8 +34,8 @@ export function ExpenseChart() {
       </CardHeader>
       <CardContent className="p-6 px-0 pt-0 relative">
         <div className="h-[250px] sm:h-[300px] w-full relative -left-4">
-          {selectedPeriod === "weekly" && <DoubleBarChart datasets={datasetsWeekly} labels={labelsWeekly} height={280} color="#7DD3FC" />}
-          {selectedPeriod === "monthly" && monthly && <BarChart data={monthly} height={280} color="#7DD3FC" />}
+          {selectedPeriod === "weekly" && <DoubleBarChart datasets={datasetsWeekly} labels={labelsWeekly} height={280} color="#7DD3FC" tooltipId="weekly-bar-chart"/>}
+          {selectedPeriod === "monthly" && monthly && <BarChart data={monthly} height={280} color="#7DD3FC" tooltipId="monthly-bar-chart"/>}
         </div>
       </CardContent>
     </Card>

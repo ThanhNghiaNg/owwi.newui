@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { ROUTES } from "@/utils/constants/routes"
 import { SESSION_ID } from "@/utils/constants/keys"
+import {  KeyRound, Mail, Moon, Sun } from "lucide-react"
 
 function LoginPage() {
     const router = useRouter()
@@ -58,7 +59,7 @@ function LoginPage() {
                 onClick={toggleTheme}
                 className="fixed top-4 right-4 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-10"
             >
-                <span className="text-xl">{theme === "light" ? "🌙" : "☀️"}</span>
+                <span className="text-xl">{theme === "light" ? <Moon/> : <Sun/>}</span>
             </button>
 
             <div className="w-full max-w-md">
@@ -67,10 +68,10 @@ function LoginPage() {
                     {/* Header */}
                     <div className="bg-gradient-to-r from-sky-600 to-blue-600 px-8 py-12 text-center">
                         <div className="flex items-center justify-center gap-3 mb-4">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
+                            {/* <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20 backdrop-blur-sm">
                                 <span className="text-2xl">🦉</span>
-                            </div>
-                            <h1 className="text-2xl font-bold text-white">OwwiMONEY</h1>
+                            </div> */}
+                            <h1 className="text-2xl font-bold text-white">OwwiMoney</h1>
                         </div>
                         <p className="text-sky-100 text-sm">Welcome back! Please sign in to your account</p>
                     </div>
@@ -82,7 +83,7 @@ function LoginPage() {
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">📧</span>
+                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"><Mail/></span>
                                     <Input
                                         name="email"
                                         type="email"
@@ -99,7 +100,7 @@ function LoginPage() {
                             <div className="space-y-2">
                                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg">🔒</span>
+                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"><KeyRound /></span>
                                     <Input
                                         name="password"
                                         type="password"
@@ -113,7 +114,7 @@ function LoginPage() {
                             </div>
 
                             {/* Remember Me & Forgot Password */}
-                            <div className="flex items-center justify-between">
+                            {/* <div className="flex items-center justify-between">
                                 <label className="flex items-center gap-2 cursor-pointer">
                                     <input
                                         type="checkbox"
@@ -129,7 +130,7 @@ function LoginPage() {
                                 >
                                     Forgot password?
                                 </button>
-                            </div>
+                            </div> */}
 
                             {/* Login Button */}
                             <Button
@@ -144,7 +145,6 @@ function LoginPage() {
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-2">
-                                        <span>🚀</span>
                                         <span>Sign In</span>
                                     </div>
                                 )}
@@ -152,14 +152,14 @@ function LoginPage() {
                         </form>
 
                         {/* Divider */}
-                        <div className="my-8 flex items-center">
+                        {/* <div className="my-8 flex items-center">
                             <div className="flex-1 border-t border-gray-200 dark:border-gray-700"></div>
                             <span className="px-4 text-sm text-gray-500 dark:text-gray-400">Or continue with</span>
                             <div className="flex-1 border-t border-gray-200 dark:border-gray-700"></div>
-                        </div>
+                        </div> */}
 
                         {/* Social Login */}
-                        <div className="grid grid-cols-2 gap-4">
+                        {/* <div className="grid grid-cols-2 gap-4">
                             <button className="flex items-center justify-center gap-2 h-12 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:border-gray-300 dark:hover:border-gray-500 transition-colors group">
                                 <span className="text-xl">🔍</span>
                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">
@@ -172,7 +172,7 @@ function LoginPage() {
                                     Facebook
                                 </span>
                             </button>
-                        </div>
+                        </div> */}
 
                         {/* Sign Up Link */}
                         <div className="mt-8 text-center">
@@ -188,7 +188,7 @@ function LoginPage() {
 
                 {/* Footer */}
                 <div className="mt-8 text-center">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">© 2024 OwwiMONEY. All rights reserved.</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">© {new Date().getFullYear()} OwwiMoney. All rights reserved.</p>
                 </div>
             </div>
         </div>

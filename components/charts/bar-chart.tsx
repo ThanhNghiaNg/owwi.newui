@@ -13,11 +13,12 @@ interface BarChartProps {
   data: BarChartData[]
   height?: number
   color?: string
+  tooltipId: string
 }
 
 const SMOOTHING_FACTOR = 100000
 
-export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProps) {
+export function BarChart({ tooltipId, data, height = 300, color = "#7DD3FC" }: BarChartProps) {
   const svgRef = useRef<SVGSVGElement>(null)
   const isSmallScreen = window.screen.width < SMALL_SCREEN_WIDTH
   const maxValue = useMemo(() => Math.max(...data.map((d) => d.value)), [data])
@@ -38,7 +39,7 @@ export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProp
   
       // Get tooltip data
       const dataTooltip = event.currentTarget.dataset.tooltip;
-      const tooltip = document.getElementById("tooltip");
+      const tooltip = document.getElementById(tooltipId);
   
       if (tooltip && dataTooltip) {
         // Create tooltip content
@@ -74,7 +75,7 @@ export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProp
   }, []);
 
   const onHideToolTip = useCallback(() => {
-    const tooltip = document.getElementById("tooltip")
+    const tooltip = document.getElementById(tooltipId)
     if (tooltip) {
       tooltip.style.opacity = "0"
       tooltip.textContent = ""
@@ -83,7 +84,7 @@ export function BarChart({ data, height = 300, color = "#7DD3FC" }: BarChartProp
 
   return (
     <div className="w-full relative">
-      <div id="tooltip" className="absolute opacity-0 w-max bg-gray-800 text-white p-2 rounded shadow-lg">ahihi</div>
+      <div id={tooltipId} className="absolute opacity-0 w-max bg-gray-800 text-white p-2 rounded shadow-lg"></div>
       <svg width="100%" height={height} viewBox={`0 0 ${chartWidth} ${height}`} className="overflow-visible" ref={svgRef}>
         {/* Grid lines */}
         {[0, 0.25, 0.5, 0.75, 1].map((ratio, index) => {
