@@ -2,6 +2,7 @@
 
 import { mutation } from "@/api/mutate";
 import { SESSION_ID } from "@/utils/constants/keys";
+import { House, User } from "lucide-react";
 import { useState } from "react"
 
 interface HeaderProps {
@@ -27,7 +28,7 @@ export function Header({ title, breadcrumbs = [] }: HeaderProps) {
     <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 sm:px-4 lg:px-6 py-3 sm:py-4 ml-0 lg:ml-0">
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400 min-w-0">
-        <span className="text-lg">🏠</span>
+        <span className="text-lg"><House /></span>
         <span className="hidden sm:inline">Home</span>
         {breadcrumbs.map((crumb, index) => (
           <div key={index} className="flex items-center gap-2 min-w-0">
@@ -48,10 +49,10 @@ export function Header({ title, breadcrumbs = [] }: HeaderProps) {
           className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
         >
           <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-sky-100 dark:bg-sky-900 flex items-center justify-center">
-            <span className="text-sm">👤</span>
+            <span className="text-sm"><User /></span>
           </div>
           <span className="text-xs sm:text-sm truncate hidden sm:inline text-gray-900 dark:text-white">
-            Hi, Thanh Nghia
+            Hi, {`{username}`}
           </span>
           <span className="text-gray-400">▼</span>
         </button>

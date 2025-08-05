@@ -14,6 +14,7 @@ import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { DeletePartnerModal } from "@/components/modals/delete-partner-modal"
 import { EditPartnerModal } from "@/components/modals/edit-partner-modal"
 import { PartnerResponse } from "@/api/types"
+import { User } from "lucide-react"
 
 export default function PartnersPage() {
   const { data: partners = [], isRefetching } = useQuery(query.partner.getAll())
@@ -85,7 +86,7 @@ export default function PartnersPage() {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                            <span className="text-sm">{partner.type.name === "company" ? "🏢" : "👤"}</span>
+                            <span className="text-sm">{partner.type.name === "company" ? "🏢" : <User />}</span>
                           </div>
                           <span className="text-gray-900 dark:text-white">{partner.name}</span>
                         </div>
