@@ -2,7 +2,7 @@
 
 import { mutation } from "@/api/mutate";
 import { SESSION_ID } from "@/utils/constants/keys";
-import { House, User } from "lucide-react";
+import { CircleUser, House } from "lucide-react";
 import { useState } from "react"
 
 interface HeaderProps {
@@ -43,13 +43,13 @@ export function Header({ title, breadcrumbs = [] }: HeaderProps) {
       </div>
 
       {/* User Menu */}
-      <div className="relative">
+      {/* <div className="relative">
         <button
           onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
           className="flex items-center gap-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
         >
           <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-sky-100 dark:bg-sky-900 flex items-center justify-center">
-            <span className="text-sm"><User /></span>
+            <span className="text-sm"><CircleUser /></span>
           </div>
           <span className="text-xs sm:text-sm truncate hidden sm:inline text-gray-900 dark:text-white">
             Hi, {`{username}`}
@@ -75,7 +75,7 @@ export function Header({ title, breadcrumbs = [] }: HeaderProps) {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   )
 }

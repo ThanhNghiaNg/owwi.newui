@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { useTheme } from "@/contexts/theme-context"
-import { BookUser, ChartNoAxesCombined, LogOut, Moon, NotebookPen, Settings, Sun, Tag } from "lucide-react"
+import { BookUser, ChartNoAxesCombined, LogOut, Menu, Moon, NotebookPen, Settings, Sun, Tag } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 
 const navigation = [
@@ -15,6 +15,12 @@ const navigation = [
   // { name: "Settings", href: "/setting", icon: <Settings /> },
 ]
 
+const mobileNavigation = [
+  { name: "Dashboard", href: "/", icon: <ChartNoAxesCombined /> },
+  { name: "Transactions", href: "/transactions", icon: <NotebookPen /> },
+  { name: "More", href: "#", icon: <Menu /> },
+]
+
 export function Sidebar() {
   const pathname = usePathname()
   const { theme, toggleTheme } = useTheme()
@@ -23,14 +29,29 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm"
-        >
-          {isMobileMenuOpen ? "✕" : "☰"}
-        </button>
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+        <nav className="flex-1 px-3 sm:px-1 py-1">
+          <ul className="flex justify-between space-y-1 sm:space-y-2">
+            {mobileNavigation.map((item) => {
+              const isActive = pathname === item.href
+              return (
+                <li key={item.name}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(item.name === "More")}
+                    className={`flex flex-col items-center gap-1 rounded-lg p-2 text-sm font-medium transition-colors ${isActive
+                      ? "bg-sky-600 text-white shadow-sm"
+                      : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                      }`}
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="truncate text-sm">{item.name}</span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </nav>
       </div>
 
       {/* Mobile overlay */}
@@ -69,8 +90,8 @@ export function Sidebar() {
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${isActive
-                        ? "bg-sky-600 text-white shadow-sm"
-                        : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                      ? "bg-sky-600 text-white shadow-sm"
+                      : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                       }`}
                   >
                     <span className="text-lg">{item.icon}</span>
