@@ -7,18 +7,12 @@ import { Sidebar } from "@/components/sidebar"
 import { ThemeProvider } from "@/contexts/theme-context"
 import { Toaster } from "react-hot-toast"
 import ClientWrapper from "@/components/client/client-wrapper"
+import Head from "next/head"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Owwi Money - Personal Finance Manager",
   description: "Manage your income, expenses, loans and financial goals",
-  manifest: "/manifest.json",
-  icons: {
-    icon: "/icons/favicon.ico",
-    apple: "/icons/apple-touch-icon.png",
-    shortcut: "/icons/favicon.ico",
-  }
-
 }
 
 export default function RootLayout({
