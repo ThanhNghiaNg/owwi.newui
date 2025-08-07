@@ -7,12 +7,18 @@ import { Sidebar } from "@/components/sidebar"
 import { ThemeProvider } from "@/contexts/theme-context"
 import { Toaster } from "react-hot-toast"
 import ClientWrapper from "@/components/client/client-wrapper"
-import Head from "next/head"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Owwi Money - Personal Finance Manager",
   description: "Manage your income, expenses, loans and financial goals",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
+    shortcut: "/icons/favicon.ico",
+  }
+
 }
 
 export default function RootLayout({
@@ -22,14 +28,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <Head>
-        <link rel="icon" type="image/png" href="/icons/favicon-96x96.png" sizes="96x96" />
-        <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
-        <link rel="shortcut icon" href="/icons/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-        <meta name="apple-mobile-web-app-title" content="OwwiMoney" />
-        <link rel="manifest" href="/icons/site.webmanifest" />
-      </Head>
       <body className={inter.className}>
         <Toaster position="top-right" />
         <ThemeProvider>
