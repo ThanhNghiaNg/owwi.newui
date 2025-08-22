@@ -52,7 +52,15 @@ export default function InstallOrOpenPWAButton() {
 
     const handleOpenApp = () => {
         // Deep link tới app (custom protocol hoặc universal link)
+
+        const now = Date.now();
         window.location.href = "web+owwi://open"; // ví dụ schema app của bạn
+
+        setTimeout(() => {
+            if (Date.now() - now < 1500) {
+                handleInstall();
+            }
+        }, 1000);
     };
 
     if (mode === "hidden") return null;
