@@ -11,6 +11,7 @@ import { SESSION_ID } from "@/utils/constants/keys"
 import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { query } from "@/api/query"
+import InstallPWAButton from "./ui/install-pwa-button"
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: <ChartNoAxesCombined /> },
@@ -123,6 +124,7 @@ export function Sidebar() {
 
         {/* Theme Toggle */}
         <div className="px-3 sm:px-4 py-2">
+          <InstallPWAButton />
           <button
             onClick={toggleTheme}
             className="w-full flex items-center justify-start gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
