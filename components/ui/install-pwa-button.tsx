@@ -1,5 +1,5 @@
 "use client";
-import { Download } from "lucide-react";
+import { Download, PictureInPicture } from "lucide-react";
 import { useEffect, useState } from "react";
 
 declare global {
@@ -8,47 +8,70 @@ declare global {
     }
 }
 
-export default function InstallPWAButton() {
-    const [isVisible, setIsVisible] = useState(false);
+export default function InstallOrOpenPWAButton() {
+    const [mode, setMode] = useState<"hidden" | "install" | "open">("open");
 
     useEffect(() => {
+        // 1. Nếu đang ở standalone (đã mở app) thì ẩn nút
+        if (window.matchMedia("(display-mode: standalone)").matches) {
+            setMode("hidden");
+            return;
+        }
+
+        // 2. Kiểm tra xem app đã cài chưa (chỉ hỗ trợ Android/Chrome)
+        if ("getInstalledRelatedApps" in navigator) {
+            (navigator as any).getInstalledRelatedApps().then((apps: any[]) => {
+                if (apps.length > 0) {
+                    setMode("open"); // đã cài rồi
+                }
+            });
+        }
+
+        // 3. Nếu chưa có thì chờ sự kiện beforeinstallprompt
         const handler = (e: Event) => {
             e.preventDefault();
             window.deferredPrompt = e;
-            setIsVisible(true); // hiển thị nút khi đủ điều kiện
+            setMode("install");
         };
 
         window.addEventListener("beforeinstallprompt", handler);
-
         return () => window.removeEventListener("beforeinstallprompt", handler);
     }, []);
 
     const handleInstall = async () => {
         const promptEvent = window.deferredPrompt;
         if (!promptEvent) return;
-
-        promptEvent.prompt(); // show popup cài đặt
+        promptEvent.prompt();
         const choiceResult = await promptEvent.userChoice;
         if (choiceResult.outcome === "accepted") {
             console.log("User accepted install");
-        } else {
-            console.log("User dismissed install");
         }
         window.deferredPrompt = null;
-        setIsVisible(false);
+        setMode("hidden");
     };
 
-    if (!isVisible) return null;
+    const handleOpenApp = () => {
+        // Deep link tới app (custom protocol hoặc universal link)
+        window.location.href = "web+owwi://open"; // ví dụ schema app của bạn
+    };
 
-
+    if (mode === "hidden") return null;
 
     return (
         <button
-            onClick={handleInstall}
+            onClick={mode === "install" ? handleInstall : handleOpenApp}
             className="w-full flex items-center justify-start gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
         >
-            <Download />
-            Download App
+
+
+            {mode === "install" ?
+                <>
+                    <Download />
+                    Download App</> :
+                <>
+                    <PictureInPicture />
+                    Open in App
+                </>}
         </button>
     );
 }

@@ -27,5 +27,11 @@
       "type": "image/png",
       "purpose": "any"
     }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+owwi",
+      "url": "/?open=%s"
+    }
   ]
 }
