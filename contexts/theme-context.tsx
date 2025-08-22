@@ -27,6 +27,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.classList.toggle("dark", theme === "dark")
   }, [theme])
 
+  useEffect(() => {
+    window.addEventListener("beforeinstallprompt", (e: any) => {
+      e.preventDefault()
+        (window as any).deferredPrompt = e
+    })
+  }, [])
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"))
   }
