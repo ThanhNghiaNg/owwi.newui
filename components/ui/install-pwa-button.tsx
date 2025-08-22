@@ -8,8 +8,17 @@ declare global {
     }
 }
 
+function isIOS() {
+    return /iPad|iPhone|iPod/i.test(navigator.userAgent);
+}
+
 export default function InstallOrOpenPWAButton() {
-    const [mode, setMode] = useState<"hidden" | "install" | "open">("open");
+    const [mode, setMode] = useState<"hidden" | "install" | "open">(() => {
+        if (isIOS()) {
+            return "hidden";
+        }
+        return "open";
+    });
 
     useEffect(() => {
         // 1. Nếu đang ở standalone (đã mở app) thì ẩn nút
