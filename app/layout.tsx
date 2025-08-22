@@ -17,8 +17,7 @@ export const metadata: Metadata = {
     icon: "/icons/favicon.ico",
     apple: "/icons/apple-touch-icon.png",
     shortcut: "/icons/favicon.ico",
-  }
-
+  },
 }
 
 export default function RootLayout({
@@ -28,6 +27,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Inject manifest manually */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      </head>
       <body className={inter.className}>
         <Toaster position="top-right" />
         <ThemeProvider>
