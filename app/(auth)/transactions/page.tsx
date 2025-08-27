@@ -17,7 +17,8 @@ import { DeleteTransactionModal } from "@/components/modals/delete-transaction-m
 // import { getTypeColor } from "@/utils/constants/styles"
 import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { TransactionResponse } from "@/api/types"
-import { Pencil, Trash2 } from "lucide-react"
+import { EyeClosedIcon, EyeIcon, Pencil, PlusIcon, Search, Trash2 } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 const tabs = ["All", "Revenue", "Expenses", "Loan", "Borrow"]
 
@@ -36,6 +37,7 @@ function TransactionsPage() {
   const [activeTab, setActiveTab] = useState("All")
   const [searchTerm, setSearchTerm] = useState("")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [showSupportLine, setShowSupportLine] = useState(true)
   const [editTransaction, setEditTransaction] = useState<TransactionResponse | null>(null)
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("")
 
@@ -57,8 +59,17 @@ function TransactionsPage() {
     }
   }, [tableData])
 
+  const onDoubleClickRow = useCallback((e: React.MouseEvent<HTMLTableRowElement>) => {
+    const transactionId = e.currentTarget.dataset.id
+    if (!transactionId) return
+    const transaction = tableData.find(t => t._id === transactionId)
+    if (transaction) {
+      setEditTransaction(transaction)
+    }
+  }, [tableData])
+
   const getTypeColor = (type: string) => {
-  
+
     switch (type.toLowerCase()) {
       case "income":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
@@ -73,6 +84,8 @@ function TransactionsPage() {
     }
   }
 
+  let border = ""
+
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
       {isRefetching && <DotLoader />}
@@ -83,10 +96,17 @@ function TransactionsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Recent Transactions</CardTitle>
-              <Button onClick={() => setIsAddModalOpen(true)}>
-                <span className="mr-2">+</span>
-                Transaction
-              </Button>
+              <div className="flex flex-col space-y-2 md:flex-row items-center md:space-x-2 md:space-y-0">
+                <Button onClick={() => setShowSupportLine(prev => !prev)} title="Show support line">
+                  <span className="mr-1 md:mr-2">{showSupportLine ? <EyeIcon size={18} /> : <EyeClosedIcon size={18} />}</span>
+                  Support line
+                </Button>
+                <Button onClick={() => setIsAddModalOpen(true)}>
+                  <span className="mr-1 md:mr-2"><PlusIcon size={18} /></span>
+                  Transaction
+                </Button>
+              </div>
+
             </div>
 
             {/* Tabs */}
@@ -109,7 +129,7 @@ function TransactionsPage() {
           <CardContent>
             {/* Search */}
             <div className="relative mb-6">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><Search size={18} /></span>
               <Input
                 placeholder="Search transactions..."
                 value={searchTerm}
@@ -122,7 +142,7 @@ function TransactionsPage() {
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
+                  <tr className="border-b border-gray-400 dark:border-gray-700">
                     <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">No</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Category</th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900 dark:text-white">Partner</th>
@@ -133,30 +153,34 @@ function TransactionsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {isError || !tableData ? null : tableData?.map((transaction, index) => (
-                    <tr key={transaction._id} className="border-b border-gray-100 dark:border-gray-800">
-                      <td className="py-3 px-4 text-gray-900 dark:text-white">{index}</td>
-                      <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.category.name}</td>
-                      <td className="py-3 px-4 text-gray-900 dark:text-white">{transaction.partner.name}</td>
-                      <td className="py-3 px-4">
-                        <Badge className={`${getTypeColor(transaction.type.name)}`}>{transaction.type.name}</Badge>
-                      </td>
-                      <td className="py-3 px-4 text-gray-900 dark:text-white">{formatDate(transaction.date, "dd/mm/yyyy")}</td>
-                      <td className="py-3 px-4 text-gray-900 dark:text-white">
-                        {transaction.amount.toLocaleString()}đ
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex space-x-2">
-                          <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onEditTransaction}>
-                            <span className="text-blue-600"><Pencil size={18} /></span>
-                          </Button>
-                          <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onDeleteTransaction}>
-                            <span className="text-red-600"><Trash2 size={18} /></span>
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {isError || !tableData ? null : tableData?.map((transaction, index) => {
+                    border = index !== tableData.length - 1 && transaction.date !== tableData[index + 1].date ? "border-t border-gray-300 dark:border-gray-700" : ""
+
+                    return (
+                      <tr key={transaction._id} data-id={transaction._id} className={cn("border-b border-gray-100 dark:border-gray-800 text-gray-900 dark:text-white", showSupportLine && border)} onDoubleClick={onDoubleClickRow}>
+                        <td className="py-3 px-4">{index}</td>
+                        <td className="py-3 px-4">{transaction.category.name}</td>
+                        <td className="py-3 px-4">{transaction.partner.name}</td>
+                        <td className="py-3 px-4">
+                          <Badge className={`${getTypeColor(transaction.type.name)}`}>{transaction.type.name}</Badge>
+                        </td>
+                        <td className="py-3 px-4">{formatDate(transaction.date, "dd/mm/yyyy")}</td>
+                        <td className="py-3 px-4">
+                          {transaction.amount.toLocaleString()}đ
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex space-x-2">
+                            <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onEditTransaction}>
+                              <span className="text-blue-600"><Pencil size={18} /></span>
+                            </Button>
+                            <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onDeleteTransaction}>
+                              <span className="text-red-600"><Trash2 size={18} /></span>
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

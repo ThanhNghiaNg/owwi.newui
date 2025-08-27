@@ -14,7 +14,7 @@ import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { DeletePartnerModal } from "@/components/modals/delete-partner-modal"
 import { EditPartnerModal } from "@/components/modals/edit-partner-modal"
 import { PartnerResponse } from "@/api/types"
-import { Pencil, Trash2, User } from "lucide-react"
+import { Pencil, PlusIcon, Search, Trash2, User } from "lucide-react"
 
 export default function PartnersPage() {
   const { data: partners = [], isRefetching } = useQuery(query.partner.getAll())
@@ -49,7 +49,7 @@ export default function PartnersPage() {
             <div className="flex items-center justify-between">
               <CardTitle>Partners</CardTitle>
               <Button onClick={() => setIsAddModalOpen(true)}>
-                <span className="mr-2">➕</span>
+                <span className="mr-2"><PlusIcon size={18} /></span>
                 Add new Partner
               </Button>
             </div>
@@ -58,7 +58,7 @@ export default function PartnersPage() {
           <CardContent>
             {/* Search */}
             <div className="relative mb-6">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><Search size={18} /></span>
               <Input
                 placeholder="Search partners..."
                 value={searchTerm}
@@ -100,10 +100,10 @@ export default function PartnersPage() {
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
                           <Button variant="ghost" size="sm" data-id={partner._id} onClick={onEditPartner}>
-                            <span className="text-blue-600"><Pencil /></span>
+                            <span className="text-blue-600"><Pencil size={18} /></span>
                           </Button>
                           <Button variant="ghost" size="sm" data-id={partner._id} onClick={onDeletePartner}>
-                            <span className="text-red-600"><Trash2 /></span>
+                            <span className="text-red-600"><Trash2 size={18} /></span>
                           </Button>
                         </div>
                       </td>
