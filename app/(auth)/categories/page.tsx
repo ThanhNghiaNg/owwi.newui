@@ -14,7 +14,7 @@ import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { CategoryResponse } from "@/api/types"
 import { EditCategoryModal } from "@/components/modals/edit-category-modal"
 import { DeleteCategoryModal } from "@/components/modals/delete-category-modal"
-import { Building, User } from "lucide-react"
+import { Building, Pencil, PlusIcon, Search, Trash2, User } from "lucide-react"
 
 export default function CategoriesPage() {
   const { data: categories = [], isRefetching } = useQuery(query.category.getAll())
@@ -41,7 +41,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
-      <DotLoader isShow={isRefetching} />
+      {isRefetching && <DotLoader />}
       <Header title="Categories" breadcrumbs={[{ name: "Categories" }]} />
       <div className="p-6">
         <Card>
@@ -49,7 +49,7 @@ export default function CategoriesPage() {
             <div className="flex items-center justify-between">
               <CardTitle>Categories</CardTitle>
               <Button onClick={() => setIsAddModalOpen(true)}>
-                <span className="mr-2">➕</span>
+                <span className="mr-2"><PlusIcon size={18} /></span>
                 Add new Category
               </Button>
             </div>
@@ -58,7 +58,7 @@ export default function CategoriesPage() {
           <CardContent>
             {/* Search */}
             <div className="relative mb-6">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><Search size={18} /></span>
               <Input
                 placeholder="Search categories..."
                 value={searchTerm}
@@ -86,7 +86,7 @@ export default function CategoriesPage() {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                            <span className="text-sm">{category.type.name === "company" ? <Building/> : <User />}</span>
+                            <span className="text-sm">{category.type.name === "company" ? <Building /> : <User />}</span>
                           </div>
                           <span className="text-gray-900 dark:text-white">{category.name}</span>
                         </div>
@@ -100,10 +100,10 @@ export default function CategoriesPage() {
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
                           <Button variant="ghost" size="sm" data-id={category._id} onClick={onEditCategory}>
-                            <span className="text-blue-600">✏️</span>
+                            <span className="text-blue-600"><Pencil size={18} /></span>
                           </Button>
                           <Button variant="ghost" size="sm" data-id={category._id} onClick={onDeleteCategory}>
-                            <span className="text-red-600">🗑️</span>
+                            <span className="text-red-600"><Trash2 size={18} /></span>
                           </Button>
                         </div>
                       </td>

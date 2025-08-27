@@ -161,7 +161,7 @@ function LoginPage() {
                         {/* Social Login */}
                         {/* <div className="grid grid-cols-2 gap-4">
                             <button className="flex items-center justify-center gap-2 h-12 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:border-gray-300 dark:hover:border-gray-500 transition-colors group">
-                                <span className="text-xl">🔍</span>
+                                <span className="text-xl"><Search size={18} /></span>
                                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">
                                     Google
                                 </span>

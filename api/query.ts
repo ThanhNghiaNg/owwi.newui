@@ -27,7 +27,6 @@ export const query = {
         whoami: () => queryOptions({
             queryKey: keys.userWhoami(),
             queryFn: whoami,
-            staleTime: ONE_HOUR_MILL
         })
     },
     type: {
