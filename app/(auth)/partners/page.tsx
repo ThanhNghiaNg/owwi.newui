@@ -6,51 +6,51 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { AddCategoryModal } from "@/components/modals/add-category-modal"
+import { AddPartnerModal } from "@/components/modals/add-partner-modal"
 import { useQuery } from "@tanstack/react-query"
 import { query } from "@/api/query"
 import { getTypeColor } from "@/utils/constants/styles"
 import { DotLoader } from "@/components/ui/skeleton/dot-loader"
-import { CategoryResponse } from "@/api/types"
-import { EditCategoryModal } from "@/components/modals/edit-category-modal"
-import { DeleteCategoryModal } from "@/components/modals/delete-category-modal"
-import { Building, User } from "lucide-react"
+import { DeletePartnerModal } from "@/components/modals/delete-partner-modal"
+import { EditPartnerModal } from "@/components/modals/edit-partner-modal"
+import { PartnerResponse } from "@/api/types"
+import { Pencil, Trash2, User } from "lucide-react"
 
-export default function CategoriesPage() {
-  const { data: categories = [], isRefetching } = useQuery(query.category.getAll())
+export default function PartnersPage() {
+  const { data: partners = [], isRefetching } = useQuery(query.partner.getAll())
   const [searchTerm, setSearchTerm] = useState("")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [editCategory, setEditCategory] = useState<CategoryResponse | null>(null)
-  const [deleteCategoryId, setDeleteCategoryId] = useState("")
+  const [editPartner, setEditPartner] = useState<PartnerResponse | null>(null)
+  const [deletePartnerId, setDeletePartnerId] = useState("")
 
-  const onDeleteCategory = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const categoryId = e.currentTarget.dataset.id
-    if (!categoryId) return
+  const onDeletePartner = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const partnerId = e.currentTarget.dataset.id
+    if (!partnerId) return
 
-    setDeleteCategoryId(categoryId)
+    setDeletePartnerId(partnerId)
   }, [])
 
-  const onEditCategory = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const categoryId = e.currentTarget.dataset.id
-    if (!categoryId) return
-    const category = categories.find(t => t._id === categoryId)
-    if (category) {
-      setEditCategory(category)
+  const onEditPartner = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const partnerId = e.currentTarget.dataset.id
+    if (!partnerId) return
+    const partner = partners.find(t => t._id === partnerId)
+    if (partner) {
+      setEditPartner(partner)
     }
-  }, [categories])
+  }, [partners])
 
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
-      <DotLoader isShow={isRefetching} />
-      <Header title="Categories" breadcrumbs={[{ name: "Categories" }]} />
+      {isRefetching && <DotLoader />}
+      <Header title="Partners" breadcrumbs={[{ name: "Partners" }]} />
       <div className="p-6">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Categories</CardTitle>
+              <CardTitle>Partners</CardTitle>
               <Button onClick={() => setIsAddModalOpen(true)}>
                 <span className="mr-2">➕</span>
-                Add new Category
+                Add new Partner
               </Button>
             </div>
           </CardHeader>
@@ -60,7 +60,7 @@ export default function CategoriesPage() {
             <div className="relative mb-6">
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">🔍</span>
               <Input
-                placeholder="Search categories..."
+                placeholder="Search partners..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -80,30 +80,30 @@ export default function CategoriesPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {categories.map((category, index) => (
-                    <tr key={category._id} className="border-b border-gray-100 dark:border-gray-800">
+                  {partners.map((partner, index) => (
+                    <tr key={partner._id} className="border-b border-gray-100 dark:border-gray-800">
                       <td className="py-3 px-4 text-gray-900 dark:text-white">{index + 1}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                            <span className="text-sm">{category.type.name === "company" ? <Building/> : <User />}</span>
+                            <span className="text-sm">{partner.type.name === "company" ? "🏢" : <User />}</span>
                           </div>
-                          <span className="text-gray-900 dark:text-white">{category.name}</span>
+                          <span className="text-gray-900 dark:text-white">{partner.name}</span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <Badge className={getTypeColor(category.type.name)}>{category.type.name}</Badge>
+                        <Badge className={getTypeColor(partner.type.name)}>{partner.type.name}</Badge>
                       </td>
                       <td className="py-3 px-4">
-                        {category.description}
+                        {partner.description}
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
-                          <Button variant="ghost" size="sm" data-id={category._id} onClick={onEditCategory}>
-                            <span className="text-blue-600">✏️</span>
+                          <Button variant="ghost" size="sm" data-id={partner._id} onClick={onEditPartner}>
+                            <span className="text-blue-600"><Pencil /></span>
                           </Button>
-                          <Button variant="ghost" size="sm" data-id={category._id} onClick={onDeleteCategory}>
-                            <span className="text-red-600">🗑️</span>
+                          <Button variant="ghost" size="sm" data-id={partner._id} onClick={onDeletePartner}>
+                            <span className="text-red-600"><Trash2 /></span>
                           </Button>
                         </div>
                       </td>
@@ -115,21 +115,21 @@ export default function CategoriesPage() {
           </CardContent>
         </Card>
       </div>
-      <AddCategoryModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
+      <AddPartnerModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
       {
-        editCategory &&
-        <EditCategoryModal
-          isOpen={!!editCategory}
-          onClose={() => setEditCategory(null)}
-          category={editCategory}
+        editPartner &&
+        <EditPartnerModal
+          isOpen={!!editPartner}
+          onClose={() => setEditPartner(null)}
+          partner={editPartner}
         />
       }
       {
-        deleteCategoryId &&
-        <DeleteCategoryModal
-          isOpen={!!deleteCategoryId}
-          onClose={() => setDeleteCategoryId("")}
-          id={deleteCategoryId}
+        deletePartnerId &&
+        <DeletePartnerModal
+          isOpen={!!deletePartnerId}
+          onClose={() => setDeletePartnerId("")}
+          id={deletePartnerId}
         />
       }
     </div>

@@ -17,6 +17,7 @@ import { DeleteTransactionModal } from "@/components/modals/delete-transaction-m
 // import { getTypeColor } from "@/utils/constants/styles"
 import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { TransactionResponse } from "@/api/types"
+import { Pencil, Trash2 } from "lucide-react"
 
 const tabs = ["All", "Revenue", "Expenses", "Loan", "Borrow"]
 
@@ -74,7 +75,7 @@ function TransactionsPage() {
 
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
-      <DotLoader isShow={isRefetching} />
+      {isRefetching && <DotLoader />}
       <Header title="Transactions" breadcrumbs={[{ name: "Transactions" }]} />
 
       <div className="p-6">
@@ -147,10 +148,10 @@ function TransactionsPage() {
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
                           <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onEditTransaction}>
-                            <span className="text-blue-600">✏️</span>
+                            <span className="text-blue-600"><Pencil size={18} /></span>
                           </Button>
                           <Button variant="ghost" size="sm" data-id={transaction._id} onClick={onDeleteTransaction}>
-                            <span className="text-red-600">🗑️</span>
+                            <span className="text-red-600"><Trash2 size={18} /></span>
                           </Button>
                         </div>
                       </td>
