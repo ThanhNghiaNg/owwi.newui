@@ -14,7 +14,7 @@ import { query } from "@/api/query"
 import InstallPWAButton from "./ui/install-pwa-button"
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: <ChartNoAxesCombined /> },
+  { name: "Dashboard", href: "/dashboard", icon: <ChartNoAxesCombined /> },
   { name: "Transactions", href: "/transactions", icon: <NotebookPen /> },
   { name: "Partners", href: "/partners", icon: <BookUser /> },
   { name: "Category", href: "/categories", icon: <Tag /> },
@@ -22,7 +22,7 @@ const navigation = [
 ]
 
 const mobileNavigation = [
-  { name: "Dashboard", href: "/", icon: <ChartNoAxesCombined /> },
+  { name: "Dashboard", href: "/dashboard", icon: <ChartNoAxesCombined /> },
   { name: "Transactions", href: "/transactions", icon: <NotebookPen /> },
   { name: "More", href: "#", icon: <Menu /> },
 ]
