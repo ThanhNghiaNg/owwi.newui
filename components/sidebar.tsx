@@ -7,7 +7,7 @@ import { useTheme } from "@/contexts/theme-context"
 import { BookUser, ChartNoAxesCombined, LogOut, Menu, Moon, NotebookPen, Settings, Sun, Tag } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
 import { mutation } from "@/api/mutate"
-import { SESSION_ID } from "@/utils/constants/keys"
+import { ACCESS_TOKEN, SESSION_ID } from "@/utils/constants/keys"
 import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { query } from "@/api/query"
@@ -39,6 +39,7 @@ export function Sidebar() {
       // router.push('/login')
       window.location.href = '/login'
       localStorage.removeItem(SESSION_ID)
+      localStorage.removeItem(ACCESS_TOKEN)
     },
     () => {
       // router.push('/login')

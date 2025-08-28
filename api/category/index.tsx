@@ -3,7 +3,7 @@ import { CategoryResponse } from "../types";
 
 type AllCategoryResponse = CategoryResponse[]
 export const getAllCategories = async (): Promise<AllCategoryResponse> => {
-    return axiosInstance.get<AllCategoryResponse, any>('/v2/categories');
+    return axiosInstance.get<AllCategoryResponse, any>('/categories');
 }
 
 type BaseCategory = {
@@ -15,14 +15,14 @@ type BaseCategory = {
 
 type CreateCategory = Omit<BaseCategory, 'id'>
 export const createCategory = async (category: CreateCategory) => {
-    return axiosInstance.post('/v2/categories', category)
+    return axiosInstance.post('/categories', category)
 }
 
 type UpdateCategory = BaseCategory
 export const updateCategory = async (category: UpdateCategory) => {
-    return axiosInstance.put(`/v2/categories/${category.id}`, category)
+    return axiosInstance.put(`/categories/${category.id}`, category)
 }
 
 export const deleteCategory = async (id: string) => {
-    return axiosInstance.delete(`/v2/categories/${id}`)
+    return axiosInstance.delete(`/categories/${id}`)
 }

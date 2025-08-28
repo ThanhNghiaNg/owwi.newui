@@ -94,15 +94,15 @@ function TransactionsPage() {
       <div className="p-6">
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between">
               <CardTitle>Recent Transactions</CardTitle>
-              <div className="flex flex-col space-y-2 md:flex-row items-center md:space-x-2 md:space-y-0">
+              <div className="flex items-center space-x-2">
                 <Button onClick={() => setShowSupportLine(prev => !prev)} title="Show support line">
-                  <span className="mr-1 md:mr-2">{showSupportLine ? <EyeIcon size={18} /> : <EyeClosedIcon size={18} />}</span>
+                  <span className="mr-1 sm:mr-2">{showSupportLine ? <EyeIcon size={18} /> : <EyeClosedIcon size={18} />}</span>
                   Support line
                 </Button>
                 <Button onClick={() => setIsAddModalOpen(true)}>
-                  <span className="mr-1 md:mr-2"><PlusIcon size={18} /></span>
+                  <span className="mr-1 sm:mr-2"><PlusIcon size={18} /></span>
                   Transaction
                 </Button>
               </div>

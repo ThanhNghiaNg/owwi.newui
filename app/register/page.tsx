@@ -14,13 +14,13 @@ import { ACCESS_TOKEN, SESSION_ID } from "@/utils/constants/keys"
 import {  KeyRound, Mail, Moon, Sun } from "lucide-react"
 import AuthForm from "@/components/form/auth"
 
-function LoginPage() {
+function RegisterPage() {
     const router = useRouter()
     const { isAuth } = useAuth()
     // const params = useSearchParams()
     const { theme, toggleTheme } = useTheme()
 
-    const { mutateAsync: login, isPending } = mutation.user.login()
+    const { mutateAsync: register, isPending } = mutation.user.register()
 
     useEffect(() => {
         if (isAuth) {
@@ -35,7 +35,7 @@ function LoginPage() {
             e.preventDefault()
             const form = new FormData(e.currentTarget)
             const formData = Object.fromEntries(form.entries()) as Record<string, string>
-            const res = await login({
+            const res = await register({
                 username: formData.email,
                 password: formData.password,
             })
@@ -63,4 +63,4 @@ function LoginPage() {
     )
 }
 
-export default LoginPage
+export default RegisterPage

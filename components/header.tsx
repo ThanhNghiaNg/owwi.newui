@@ -1,7 +1,7 @@
 "use client"
 
 import { mutation } from "@/api/mutate";
-import { SESSION_ID } from "@/utils/constants/keys";
+import { ACCESS_TOKEN, SESSION_ID } from "@/utils/constants/keys";
 import { CircleUser, House } from "lucide-react";
 import { useState } from "react"
 
@@ -17,6 +17,7 @@ export function Header({ title, breadcrumbs = [] }: HeaderProps) {
       setIsUserMenuOpen(false)
       window.location.href = "/login"
       localStorage.removeItem(SESSION_ID)
+      localStorage.removeItem(ACCESS_TOKEN)
     },
     () => {
       setIsUserMenuOpen(false)

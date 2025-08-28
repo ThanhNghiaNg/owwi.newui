@@ -21,7 +21,7 @@ export const userLogout = async () => {
 }
 
 export const userRegister = async (params: {username: string, password: string}) => {
-    return axiosInstance.post(`/register`, params);
+    return axiosInstance.post<any, UserLoginResponse>(`/register`, params);
 }
 
 type WhoamiResponse = {
@@ -34,5 +34,5 @@ export const whoami = async () => {
 
 type AllTypeResponse = TypeResponse[]
 export const getAllTypes = async (): Promise<AllTypeResponse> => {
-    return axiosInstance.get<any, AllTypeResponse>('/user/type/all');
+    return axiosInstance.get<any, AllTypeResponse>('/types');
 }

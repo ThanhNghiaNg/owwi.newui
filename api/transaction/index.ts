@@ -18,7 +18,7 @@ export interface GetTransactionParams extends TableFilter {
 }
 
 export const getTransactions = async (params: GetTransactionParams): Promise<TableResponse<TransactionResponse>> => {
-    return axiosInstance.get<TableResponse<TransactionResponse>, any>('/v2/transactions', {
+    return axiosInstance.get<TableResponse<TransactionResponse>, any>('/transactions', {
         params
     })
 }
@@ -36,16 +36,16 @@ type BaseTransaction = {
 
 type CreateTransaction = Omit<BaseTransaction, '_id'>
 export const createTransaction = async (transaction: CreateTransaction) => {
-    return axiosInstance.post('/v2/transactions', transaction)
+    return axiosInstance.post('/transactions', transaction)
 }
 
 type UpdateTransaction = BaseTransaction
 export const updateTransaction = async (transaction: UpdateTransaction) => {
-    return axiosInstance.put(`/v2/transactions/${transaction._id}`, transaction)
+    return axiosInstance.put(`/transactions/${transaction._id}`, transaction)
 }
 
 export const deleteTransaction = async (id: string) => {
-    return axiosInstance.delete(`/v2/transactions/${id}`)
+    return axiosInstance.delete(`/transactions/${id}`)
 }
 
 type StatisticWeeklyResponse = {
@@ -59,7 +59,7 @@ type StatisticWeeklyResponse = {
     ]
 }
 export const statisticWeekly = async () => {
-    return axiosInstance.get<any, StatisticWeeklyResponse>(`/v2/transactions/statistic/weekly`)
+    return axiosInstance.get<any, StatisticWeeklyResponse>(`/transactions/statistic/weekly`)
 }
 
 type StatisticMonthlyResponse = Array<{
@@ -67,7 +67,7 @@ type StatisticMonthlyResponse = Array<{
     value: number;
 }>
 export const statisticMonthly = async () => {
-    return axiosInstance.get<any, StatisticMonthlyResponse>(`/v2/transactions/statistic/monthly`)
+    return axiosInstance.get<any, StatisticMonthlyResponse>(`/transactions/statistic/monthly`)
 }
 
 type StatisticMonthResponse = Array<{
@@ -76,5 +76,5 @@ type StatisticMonthResponse = Array<{
     color: string;
 }>
 export const statisticMonth = async (month: number) => {
-    return axiosInstance.get<any, StatisticMonthResponse>(`/v2/transactions/statistic/month?month=${month}`)
+    return axiosInstance.get<any, StatisticMonthResponse>(`/transactions/statistic/month?month=${month}`)
 }
