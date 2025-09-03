@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import ERROR_MESSAGE from "@/utils/constants/error-message";
+import { ERROR_MESSAGE } from "@/utils/constants/message";
 import toast from 'react-hot-toast';
 import { SESSION_ID } from '@/utils/constants/keys';
 
