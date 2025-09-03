@@ -13,14 +13,16 @@ import { ROUTES } from "@/utils/constants/routes"
 import { SESSION_ID } from "@/utils/constants/keys"
 import {  KeyRound, Mail, Moon, Sun } from "lucide-react"
 import AuthForm from "@/components/form/auth"
+import toast from "react-hot-toast"
+import { SUCCESS_MESSAGE } from "@/utils/constants/message"
 
-function LoginPage() {
+function RegisterPage() {
     const router = useRouter()
     const { isAuth } = useAuth()
     // const params = useSearchParams()
     const { theme, toggleTheme } = useTheme()
 
-    const { mutateAsync: login, isPending } = mutation.user.login()
+    const { mutateAsync: register, isPending, error } = mutation.user.register()
 
     useEffect(() => {
         if (isAuth) {
@@ -35,14 +37,17 @@ function LoginPage() {
             e.preventDefault()
             const form = new FormData(e.currentTarget)
             const formData = Object.fromEntries(form.entries()) as Record<string, string>
-            const res = await login({
+            await register({
                 username: formData.email,
                 password: formData.password,
             })
-            if (res.sessionToken) {
-                localStorage.setItem(SESSION_ID, res.sessionToken)
-                router.push(ROUTES.HOME)
+
+            if (error) {
+                console.error(error)
+                return
             }
+            toast.success(SUCCESS_MESSAGE.REGISTER)
+            router.push(ROUTES.LOGIN)
         } catch (error) {
             console.error(error)
         }
@@ -63,4 +68,4 @@ function LoginPage() {
     )
 }
 
-export default LoginPage
+export default RegisterPage
