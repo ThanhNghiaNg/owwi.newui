@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, memo } from "react"
 
 interface ComboboxOption {
   value: string
@@ -14,11 +14,13 @@ interface ComboboxProps {
   onChange?: (value: string) => void
   placeholder?: string
   className?: string
+  name?: string
 }
 
-export function Combobox({ options, value, onChange, placeholder = "Search...", className = "" }: ComboboxProps) {
+export const Combobox = memo(({ options, value, onChange, placeholder = "Search...", name, className = "" }: ComboboxProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
+  const [valueHidden, setValueHidden] = useState("")
   const [highlightedIndex, setHighlightedIndex] = useState(-1)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
@@ -33,6 +35,31 @@ export function Combobox({ options, value, onChange, placeholder = "Search...", 
     }
   }, [selectedOption])
 
+  useEffect(() => {
+    // Tìm form cha gần nhất
+
+    const form = inputRef.current?.closest("form")
+    if (!form) return
+
+    // Khi form reset → clear combobox state
+    const handleReset = () => {
+      setSearchTerm("")
+      setValueHidden("")
+      setHighlightedIndex(-1)
+      setIsOpen(false)
+    }
+
+
+    if (name) {
+      form.addEventListener("reset", handleReset)
+    }
+    return () => {
+      if (name) {
+        form.removeEventListener("reset", handleReset)
+      }
+    }
+  }, [])
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
     setIsOpen(true)
@@ -41,6 +68,7 @@ export function Combobox({ options, value, onChange, placeholder = "Search...", 
 
   const handleOptionClick = (option: ComboboxOption) => {
     onChange?.(option.value)
+    name && setValueHidden(option.value)
     setSearchTerm(option.label)
     setIsOpen(false)
     setHighlightedIndex(-1)
@@ -90,6 +118,7 @@ export function Combobox({ options, value, onChange, placeholder = "Search...", 
         placeholder={placeholder}
         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400"
       />
+      {name && <input value={valueHidden} name={name} className="hidden" onReset={(e: any) => { console.log("hehe") }} />}
 
       {isOpen && filteredOptions.length > 0 && (
         <ul
@@ -100,9 +129,8 @@ export function Combobox({ options, value, onChange, placeholder = "Search...", 
             <li
               key={option.value}
               onClick={() => handleOptionClick(option)}
-              className={`px-3 py-2 cursor-pointer text-gray-900 dark:text-white ${
-                index === highlightedIndex ? "bg-sky-100 dark:bg-sky-900" : "hover:bg-gray-100 dark:hover:bg-gray-700"
-              }`}
+              className={`px-3 py-2 cursor-pointer text-gray-900 dark:text-white ${index === highlightedIndex ? "bg-sky-100 dark:bg-sky-900" : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                }`}
             >
               {option.label}
             </li>
@@ -117,4 +145,6 @@ export function Combobox({ options, value, onChange, placeholder = "Search...", 
       )}
     </div>
   )
-}
+})
+
+Combobox.displayName = "Combobox"

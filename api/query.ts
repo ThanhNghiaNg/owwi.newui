@@ -11,7 +11,7 @@ export const keys = {
     user: ['user'],
     userWhoami: () => [...keys.all, 'user', 'whoami'],
     transaction: (id: string) => [...keys.all, 'transaction', id],
-    transactions: () => [...keys.all, 'transactions'],
+    transactions: (query?: GetTransactionParams) => [...keys.all, 'transactions', JSON.stringify(query || {})],
     transactions_statistic_weekly: () => [...keys.transactions(), 'statistic', 'weekly'],
     transactions_statistic_monthly: () => [...keys.transactions(), 'statistic', 'monthly'],
     transactions_statistic_month: (month: number) => [...keys.transactions(), 'statistic', 'month', month],
@@ -57,7 +57,7 @@ export const query = {
                 queryFn: () => getTransactionById(id),
             }),
         getAllTransaction: (query: GetTransactionParams) => infiniteQueryOptions({
-            queryKey: keys.transactions(),
+            queryKey: keys.transactions(query),
             queryFn: ({ pageParam }: { pageParam: string | null }) => getTransactions({ cursor: pageParam, ...query }),
             initialPageParam: null,
             staleTime: FIVE_MINUTE_MILL, // 5 minutes

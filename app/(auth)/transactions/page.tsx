@@ -3,11 +3,10 @@
 import { useCallback, useMemo, useState } from "react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AddTransactionModal } from "@/components/modals/add-transaction-modal"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import { query } from "@/api/query"
 import { formatDate } from "@/utils/formats/date"
 import TableLoadMore from "@/components/table/pagination"
@@ -19,10 +18,13 @@ import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { TransactionResponse } from "@/api/types"
 import { EyeClosedIcon, EyeIcon, Pencil, PlusIcon, Search, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import TableFilter, { FilterOption } from "@/components/table/filter"
 
 const tabs = ["All", "Revenue", "Expenses", "Loan", "Borrow"]
 
 function TransactionsPage() {
+  const [filters, setFilters] = useState<{ [key: string]: string | number | boolean }>({})
+
   const pagination = usePagination()
   const { limit, setLimit } = pagination
 
@@ -32,16 +34,37 @@ function TransactionsPage() {
     isError,
     isFetching,
     isRefetching,
-  } = useInfiniteQuery(query.transaction.getAllTransaction({ limit }))
+  } = useInfiniteQuery(query.transaction.getAllTransaction({ limit, filters }))
+
+  const { data: partners = [], isFetching: isFetchingPartners } = useQuery(query.partner.getAll())
+  const { data: categories = [], isFetching: isFetchingCategories } = useQuery(query.category.getAll())
+  const { data: types = [], isFetching: isFetchingTypes } = useQuery(query.type.getAll())
+
+  const isFetchingFilters = isFetchingPartners || isFetchingCategories || isFetchingTypes
 
   const [activeTab, setActiveTab] = useState("All")
-  const [searchTerm, setSearchTerm] = useState("")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [showSupportLine, setShowSupportLine] = useState(true)
   const [editTransaction, setEditTransaction] = useState<TransactionResponse | null>(null)
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("")
 
   const tableData = useMemo(() => data?.pages?.flatMap(page => page?.data) || [], [data?.pages])
+
+  const filterOptions: FilterOption[] = useMemo(() => [
+
+    {
+      label: "Category", name: "category", type: "combobox", options: categories.map(c => ({ value: c._id, label: c.name }))
+    },
+    {
+      label: "Partner", name: "partner", type: "combobox", options: partners.map(p => ({ value: p._id, label: p.name }))
+    },
+    {
+      label: "Type", name: "type", type: "combobox", options: types.map(t => ({ value: t._id, label: t.name }))
+    },
+    {
+      label: "Description", name: "description", type: "text"
+    },
+  ], [categories, partners, types])
 
   const onDeleteTransaction = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const transactionId = e.currentTarget.dataset.id
@@ -85,10 +108,11 @@ function TransactionsPage() {
   }
 
   let border = ""
+  let totalOutcome = 0
 
   return (
     <div className="flex-1 bg-gray-50 dark:bg-gray-900">
-      {isRefetching && <DotLoader />}
+      {(isRefetching || isFetching) && <DotLoader />}
       <Header title="Transactions" breadcrumbs={[{ name: "Transactions" }]} />
 
       <div className="p-6">
@@ -127,16 +151,7 @@ function TransactionsPage() {
           </CardHeader>
 
           <CardContent>
-            {/* Search */}
-            <div className="relative mb-6">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><Search size={18} /></span>
-              <Input
-                placeholder="Search transactions..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+            <TableFilter disableEnter={isFetchingFilters} className="relative mb-6" enterLabel="Search" filters={filters} setFilters={setFilters} filterOptions={filterOptions} />
 
             {/* Table */}
             <div className="overflow-x-auto">
@@ -155,7 +170,7 @@ function TransactionsPage() {
                 <tbody>
                   {isError || !tableData ? null : tableData?.map((transaction, index) => {
                     border = index !== tableData.length - 1 && transaction.date !== tableData[index + 1].date ? "border-t border-gray-300 dark:border-gray-700" : ""
-
+                    totalOutcome += transaction.type.name.toLowerCase() === "outcome" ? transaction.amount : 0
                     return (
                       <tr key={transaction._id} data-id={transaction._id} className={cn("border-b border-gray-100 dark:border-gray-800 text-gray-900 dark:text-white", showSupportLine && border)} onDoubleClick={onDoubleClickRow}>
                         <td className="py-3 px-4">{index}</td>
@@ -181,12 +196,26 @@ function TransactionsPage() {
                       </tr>
                     )
                   })}
+                  <tr className={cn("border-b border-gray-100 dark:border-gray-800 text-gray-900 dark:text-white", showSupportLine && border)}>
+                        <td className="py-3 px-4"></td>
+                        <td className="py-3 px-4"></td>
+                        <td className="py-3 px-4"></td>
+                        <td className="py-3 px-4">
+                          
+                        </td>
+                        <td className="py-3 px-4">Tổng chi:</td>
+                        <td className="py-3 px-4">
+                          {totalOutcome.toLocaleString()}đ
+                        </td>
+                        <td className="py-3 px-4">
+                        </td>
+                      </tr>
                 </tbody>
               </table>
             </div>
 
             {/* Pagination */}
-            <TableLoadMore fetchNextPage={fetchNextPage} isLoading={isFetching} setLimit={setLimit} defaultLimit={limit} />
+            {data?.pages[data?.pages?.length-1].hasNextPage && <TableLoadMore fetchNextPage={fetchNextPage} isLoading={isFetching} setLimit={setLimit} defaultLimit={limit} />}
           </CardContent>
         </Card>
       </div>

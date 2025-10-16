@@ -14,12 +14,16 @@ export interface TableFilter {
 export interface GetTransactionParams extends TableFilter {
     page?: number;
     limit?: number;
-    filter?: string;
+    filters? : { [key: string]: string | number | boolean };
 }
 
 export const getTransactions = async (params: GetTransactionParams): Promise<TableResponse<TransactionResponse>> => {
+    const { filters, ...rest } = params
     return axiosInstance.get<TableResponse<TransactionResponse>, any>('/v2/transactions', {
-        params
+        params: {
+            ...rest,
+            ...filters
+        }
     })
 }
 
