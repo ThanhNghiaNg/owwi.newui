@@ -3,16 +3,17 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { useTheme } from "@/contexts/theme-context"
 import { mutation } from "@/api/mutate"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/use-auth"
 import { ROUTES } from "@/utils/constants/routes"
 import { SESSION_ID } from "@/utils/constants/keys"
-import {  KeyRound, Mail, Moon, Sun } from "lucide-react"
+import { Moon, Sun } from "lucide-react"
 import AuthForm from "@/components/form/auth"
+import toast from "react-hot-toast"
+import { ERROR_MESSAGE } from "@/utils/constants/message"
+import { AxiosError } from "axios"
 
 function LoginPage() {
     const router = useRouter()
@@ -21,6 +22,7 @@ function LoginPage() {
     const { theme, toggleTheme } = useTheme()
 
     const { mutateAsync: login, isPending } = mutation.user.login()
+    const [errorMessage, setErrorMessage] = useState<string>();
 
     useEffect(() => {
         if (isAuth) {
@@ -32,6 +34,7 @@ function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         try {
+            setErrorMessage("")
             e.preventDefault()
             const form = new FormData(e.currentTarget)
             const formData = Object.fromEntries(form.entries()) as Record<string, string>
@@ -44,6 +47,10 @@ function LoginPage() {
                 router.push(ROUTES.HOME)
             }
         } catch (error) {
+            if (error instanceof AxiosError) {
+                setErrorMessage(error.response?.data?.message);
+            }
+            toast.error(ERROR_MESSAGE.SYSTEM_ERROR)
             console.error(error)
         }
     }
@@ -55,10 +62,10 @@ function LoginPage() {
                 onClick={toggleTheme}
                 className="fixed top-4 right-4 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-10"
             >
-                <span className="text-xl">{theme === "light" ? <Moon/> : <Sun/>}</span>
+                <span className="text-xl">{theme === "light" ? <Moon /> : <Sun />}</span>
             </button>
 
-            <AuthForm handleSubmit={handleSubmit} isPending={isPending} />
+            <AuthForm handleSubmit={handleSubmit} isPending={isPending} errorMessage={errorMessage} />
         </div>
     )
 }
