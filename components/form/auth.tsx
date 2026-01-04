@@ -9,8 +9,9 @@ import Link from 'next/link'
 type AuthFormProps = {
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
     isPending: boolean
+    errorMessage?: string
 }
-const AuthForm = ({ handleSubmit, isPending }: AuthFormProps) => {
+const AuthForm = ({ handleSubmit, isPending, errorMessage }: AuthFormProps) => {
     const pathname = usePathname()
     const isLogin = pathname === ROUTES.LOGIN
     return (
@@ -64,6 +65,12 @@ const AuthForm = ({ handleSubmit, isPending }: AuthFormProps) => {
                                 />
                             </div>
                         </div>
+
+                        {errorMessage && (
+                            <div className="mt-4 text-sm text-red-600 dark:text-red-400 text-center">
+                                {errorMessage}
+                            </div>
+                        )}
 
                         {/* Remember Me & Forgot Password */}
                         {/* <div className="flex items-center justify-between">

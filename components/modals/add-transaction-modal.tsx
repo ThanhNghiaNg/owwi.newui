@@ -12,10 +12,11 @@ import { AxiosError } from "axios"
 interface AddTransactionModalProps {
   isOpen: boolean
   onClose: () => void
+  queryKey?: object
 }
 
-export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProps) {
-  const { mutateAsync: createTransaction } = mutation.transaction.create()
+export function AddTransactionModal({ isOpen, onClose, queryKey }: AddTransactionModalProps) {
+  const { mutateAsync: createTransaction } = mutation.transaction.create(queryKey)
   const handleSubmit = async (formData: TransactionFormData, reset: () => void) => {
     await createTransaction(formData, {
       onSuccess: () => {
