@@ -4,8 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { useTheme } from "@/contexts/theme-context"
-import { BookUser, ChartNoAxesCombined, LogOut, Menu, Moon, NotebookPen, Settings, Sun, Tag } from "lucide-react"
-import { useAuth } from "@/hooks/use-auth"
+import { BookUser, ChartNoAxesCombined, LogOut, Menu, Moon, NotebookPen, Scale, Sun, Tag } from "lucide-react"
 import { mutation } from "@/api/mutate"
 import { SESSION_ID } from "@/utils/constants/keys"
 import { useRouter } from "next/navigation"
@@ -18,6 +17,7 @@ const navigation = [
   { name: "Transactions", href: "/transactions", icon: <NotebookPen /> },
   { name: "Partners", href: "/partners", icon: <BookUser /> },
   { name: "Category", href: "/categories", icon: <Tag /> },
+  { name: "Six Jars", href: "/six-jars", icon: <Scale /> },
   // { name: "Settings", href: "/setting", icon: <Settings /> },
 ]
 
