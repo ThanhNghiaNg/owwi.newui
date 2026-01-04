@@ -16,7 +16,7 @@ import { DeleteTransactionModal } from "@/components/modals/delete-transaction-m
 // import { getTypeColor } from "@/utils/constants/styles"
 import { DotLoader } from "@/components/ui/skeleton/dot-loader"
 import { TransactionResponse } from "@/api/types"
-import { EyeClosedIcon, EyeIcon, Pencil, PlusIcon, Search, Trash2 } from "lucide-react"
+import { Captions, CaptionsOff, EyeIcon, EyeOff, Pencil, PlusIcon, Trash2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import TableFilter, { FilterOption } from "@/components/table/filter"
 
@@ -28,7 +28,7 @@ function TransactionsPage() {
   const pagination = usePagination()
   const { limit, setLimit } = pagination
 
-  const queryParams = useMemo(() => ({ limit, filters }),[limit, filters])
+  const queryParams = useMemo(() => ({ limit, filters }), [limit, filters])
 
   const {
     data,
@@ -44,9 +44,9 @@ function TransactionsPage() {
 
   const isFetchingFilters = isFetchingPartners || isFetchingCategories || isFetchingTypes
 
-  const [activeTab, setActiveTab] = useState("All")
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [showSupportLine, setShowSupportLine] = useState(true)
+  const [hideSensitive, setHideSensitive] = useState(true)
   const [editTransaction, setEditTransaction] = useState<TransactionResponse | null>(null)
   const [deleteTransactionId, setDeleteTransactionId] = useState<string>("")
 
@@ -120,16 +120,20 @@ function TransactionsPage() {
       <div className="p-6">
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap">
               <CardTitle>Recent Transactions</CardTitle>
-              <div className="flex flex-col space-y-2 md:flex-row items-center md:space-x-2 md:space-y-0">
+              <div className="flex md:flex-row items-center space-x-2 w-full md:w-auto md:mt-0 mt-4">
+                <Button onClick={() => setHideSensitive(prev => !prev)} title="Show sensitive information">
+                  <span>{hideSensitive ? <EyeIcon size={18} /> : <EyeOff size={18} />}</span>
+                  {/* Sensitive */}
+                </Button>
                 <Button onClick={() => setShowSupportLine(prev => !prev)} title="Show support line">
-                  <span className="mr-1 md:mr-2">{showSupportLine ? <EyeIcon size={18} /> : <EyeClosedIcon size={18} />}</span>
-                  Support line
+                  <span>{showSupportLine ? <Captions size={18} /> : <CaptionsOff size={18} />}</span>
+                  {/* Support line */}
                 </Button>
                 <Button onClick={() => setIsAddModalOpen(true)}>
-                  <span className="mr-1 md:mr-2"><PlusIcon size={18} /></span>
-                  Transaction
+                  <span><PlusIcon size={18} /></span>
+                  {/* Transaction */}
                 </Button>
               </div>
 
@@ -183,7 +187,7 @@ function TransactionsPage() {
                         </td>
                         <td className="py-3 px-4">{formatDate(transaction.date, "dd/mm/yyyy")}</td>
                         <td className="py-3 px-4">
-                          {transaction.amount.toLocaleString()}đ
+                          {transaction.type.name.toLowerCase() === "income" && hideSensitive ? "******" : transaction.amount.toLocaleString()}đ
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex space-x-2">
@@ -199,25 +203,25 @@ function TransactionsPage() {
                     )
                   })}
                   <tr className={cn("border-b border-gray-100 dark:border-gray-800 text-gray-900 dark:text-white", showSupportLine && border)}>
-                        <td className="py-3 px-4"></td>
-                        <td className="py-3 px-4"></td>
-                        <td className="py-3 px-4"></td>
-                        <td className="py-3 px-4">
-                          
-                        </td>
-                        <td className="py-3 px-4">Tổng chi:</td>
-                        <td className="py-3 px-4">
-                          {totalOutcome.toLocaleString()}đ
-                        </td>
-                        <td className="py-3 px-4">
-                        </td>
-                      </tr>
+                    <td className="py-3 px-4"></td>
+                    <td className="py-3 px-4"></td>
+                    <td className="py-3 px-4"></td>
+                    <td className="py-3 px-4">
+
+                    </td>
+                    <td className="py-3 px-4">Tổng chi:</td>
+                    <td className="py-3 px-4">
+                      {totalOutcome.toLocaleString()}đ
+                    </td>
+                    <td className="py-3 px-4">
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
 
             {/* Pagination */}
-            {data?.pages[data?.pages?.length-1].hasNextPage && <TableLoadMore fetchNextPage={fetchNextPage} isLoading={isFetching} setLimit={setLimit} defaultLimit={limit} />}
+            {data?.pages[data?.pages?.length - 1].hasNextPage && <TableLoadMore fetchNextPage={fetchNextPage} isLoading={isFetching} setLimit={setLimit} defaultLimit={limit} />}
           </CardContent>
         </Card>
       </div>
