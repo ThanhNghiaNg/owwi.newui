@@ -15,11 +15,12 @@ import { TransactionResponse } from "@/api/types"
 interface EditTransactionModalProps {
   isOpen: boolean,
   transaction: TransactionResponse,
-  onClose: () => void
+  onClose: () => void,
+  queryKey: object
 }
 
-export function EditTransactionModal({ isOpen, transaction, onClose }: EditTransactionModalProps) {
-  const { mutateAsync: updateTransactions, isPending } = mutation.transaction.update()
+export function EditTransactionModal({ isOpen, transaction, onClose, queryKey }: EditTransactionModalProps) {
+  const { mutateAsync: updateTransactions, isPending } = mutation.transaction.update(queryKey)
   const handleSubmit = async (formData: TransactionFormData, reset: () => void) => {
     await updateTransactions({
       _id: transaction._id,

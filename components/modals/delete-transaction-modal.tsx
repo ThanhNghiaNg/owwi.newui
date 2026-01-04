@@ -11,11 +11,12 @@ import { AxiosError } from "axios"
 interface DeleteTransactionModalProps {
   isOpen: boolean,
   id: string,
-  onClose: () => void
+  onClose: () => void,
+  queryKey?: object
 }
 
-export function DeleteTransactionModal({ isOpen, id, onClose }: DeleteTransactionModalProps) {
-  const { mutateAsync: deleteTransactions, isPending } = mutation.transaction.delete()
+export function DeleteTransactionModal({ isOpen, id, onClose, queryKey }: DeleteTransactionModalProps) {
+  const { mutateAsync: deleteTransactions, isPending } = mutation.transaction.delete(queryKey)
   const handleSubmit = async () => {
     await deleteTransactions(id, {
       onSuccess: (data) => {

@@ -28,13 +28,15 @@ function TransactionsPage() {
   const pagination = usePagination()
   const { limit, setLimit } = pagination
 
+  const queryKey = useMemo(() => query.transaction.getAllTransaction({ limit, filters }),[limit, filters])
+
   const {
     data,
     fetchNextPage,
     isError,
     isFetching,
     isRefetching,
-  } = useInfiniteQuery(query.transaction.getAllTransaction({ limit, filters }))
+  } = useInfiniteQuery(queryKey)
 
   const { data: partners = [], isFetching: isFetchingPartners } = useQuery(query.partner.getAll())
   const { data: categories = [], isFetching: isFetchingCategories } = useQuery(query.category.getAll())
@@ -222,6 +224,7 @@ function TransactionsPage() {
       <AddTransactionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        queryKey={queryKey}
       />
       {
         editTransaction &&
@@ -229,6 +232,7 @@ function TransactionsPage() {
           isOpen={!!editTransaction}
           onClose={() => setEditTransaction(null)}
           transaction={editTransaction}
+          queryKey={queryKey}
         />
       }
       {
@@ -237,6 +241,7 @@ function TransactionsPage() {
           isOpen={!!deleteTransactionId}
           onClose={() => setDeleteTransactionId("")}
           id={deleteTransactionId}
+          queryKey={queryKey}
         />
       }
     </div>

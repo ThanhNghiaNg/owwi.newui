@@ -59,30 +59,30 @@ export const mutation = {
       }),
   },
   transaction: {
-    create: () => useMutation({
+    create: (queryKey?: object) => useMutation({
       mutationKey: MutationKey.transaction.create(),
       mutationFn: createTransaction,
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.transactions()
+          queryKey: queryKeys.transactions(queryKey)
         })
       }
     }),
-    update: () => useMutation({
+    update: (queryKey?: object) => useMutation({
       mutationKey: MutationKey.transaction.update(),
       mutationFn: updateTransaction,
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.transactions()
+          queryKey: queryKeys.transactions(queryKey)
         })
       }
     }),
-    delete: () => useMutation({
+    delete: (queryKey?: object) => useMutation({
       mutationKey: MutationKey.transaction.delete(),
       mutationFn: deleteTransaction,
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: queryKeys.transactions()
+          queryKey: queryKeys.transactions(queryKey)
         })
       }
     })
