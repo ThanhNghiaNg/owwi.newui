@@ -1,0 +1,1 @@
+export const APP_VERSION = process.env.VERCEL_GIT_COMMIT_SHORT_SHA ?? "local";
